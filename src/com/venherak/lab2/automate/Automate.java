@@ -7,10 +7,11 @@ public class Automate {
     List<State> states;
     private State current;
     private static final int DEFAULT_STATE_ID = 2;
+
     public Automate() {
         states = new ArrayList<>();
 
-        for(int i = DEFAULT_STATE_ID; i < 9 + 1; i++) {
+        for (int i = DEFAULT_STATE_ID; i < 9 + 1; i++) {
             states.add(new State(i));
         }
 
@@ -53,7 +54,7 @@ public class Automate {
     }
 
     public String toString() {
-        String output = "Current state: \n" + current.toString() + "\n\n";
+        String output = "Current state: " + current.toString() + "\n";
         for (State state : this.states) {
             output += state.toString() + "\n";
         }

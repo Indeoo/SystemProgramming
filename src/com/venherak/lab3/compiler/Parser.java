@@ -53,7 +53,7 @@ public class Parser {
                 word = "";
             }
         }
-        if(word.length() != 0) {
+        if (word.length() != 0) {
             addToken(new Token(word, "IDENTIFIER"));
         }
     }
@@ -67,8 +67,8 @@ public class Parser {
             } else {
                 //if(isNumeric(word.substring(0,1))) {
                 //} else {
-                    addToken(new Token(word, "IDENTIFIER"));
-                    addToLexemeSet(new Token(word, "IDENTIFIER"));
+                addToken(new Token(word, "IDENTIFIER"));
+                addToLexemeSet(new Token(word, "IDENTIFIER"));
                 //}
             }
         }

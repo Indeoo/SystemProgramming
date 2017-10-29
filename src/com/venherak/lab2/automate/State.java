@@ -5,10 +5,6 @@ public class State {
     private State dlm;
     private State ltr;
 
-    State(int id, State dlm, State ltr) {
-        this.id = id;
-    }
-
     public void setDlm(State dlm) {
         this.dlm = dlm;
     }

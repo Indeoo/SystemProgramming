@@ -7,9 +7,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Main {
-    //private static String expression = "int main (void) {float b,a[13];int n;...}";
-    //private static String expression = "static void Result(string temp){for (int j = 0; j < reservedWords.Length; j++){if (temp == reservedWords[j]){for (int i = 0; i < tableR.Count; i++){if (temp == tableR[i]){return;";
-    private static String expression = "1kek kekos";
+    static String expression = "int main (void) {float b,a[13];int n;...}";
+
     static Set<Token> delimiterList;
     static Set<Token> operatorList;
     static Set<Token> keywordList;
@@ -25,6 +24,7 @@ public class Main {
 
         System.out.println(parser.toString());
     }
+
     public static void getCAlphabet() {
         delimiterList = new HashSet<>();
 
