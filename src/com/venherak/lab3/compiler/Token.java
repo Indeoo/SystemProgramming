@@ -10,15 +10,7 @@ public class Token {
         this.title = title;
     }
 
-    public Token() {
-
-    }
-
-    public String getSign() {
-        return sign;
-    }
-
-    public String getTitle() {
+    String getTitle() {
         return title;
     }
 

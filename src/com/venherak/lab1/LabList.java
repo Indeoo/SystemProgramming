@@ -1,13 +1,31 @@
 package com.venherak.lab1;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
 class LabList extends ArrayList<Entry> {
-    public static int queue = 0;
+    private static int queue;
+    private static final String filepath = "/home/indeoo/Projects/SystemProg/";
+    private static final String filename = "queue";
+    private static final File file;
+    static {
+        file = new File(filepath + filename);
 
-    public Entry maxCoincidence(String key) {
+        if(!file.exists()) {
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        readFile();
+        System.out.println("Current queue: " + queue + "\n");
+    }
+
+
+    Entry maxCoincidence(String key) {
         char[] keyChars = key.toLowerCase().toCharArray();
         int edge = keyChars.length;
         int counter;
@@ -29,30 +47,34 @@ class LabList extends ArrayList<Entry> {
         }
         int maxElement = findMaxElement(counterArr);
         boolean positionOfMaxElementArr[] = searchElementInArray(maxElement, counterArr);
-        for (int i = 0; i < this.size() ; i++) {
+        for (int i = 0; i < this.size(); i++) {
             if (positionOfMaxElementArr[i]) {
                 list.add(this.get(i));
             }
         }
         Entry entry = list.get(queue);
-        if (list.size() > 1) {
-            queue++;
+        queue++;
+        if (queue == list.size()) {
+            queue = 0;
         }
+
+        writeFile(queue);
+
         return entry;
     }
 
-    public int findMaxElement(int[] entryArr) {
+    private int findMaxElement(int[] entryArr) {
         int max = Integer.MIN_VALUE;
 
-        for (int i = 0; i < entryArr.length; i++) {
-            if (max < entryArr[i]) {
-                max = entryArr[i];
+        for (int anEntryArr : entryArr) {
+            if (max < anEntryArr) {
+                max = anEntryArr;
             }
         }
         return max;
     }
 
-    public boolean[] searchElementInArray(int key, int[] arr) {
+    private boolean[] searchElementInArray(int key, int[] arr) {
         boolean[] resultArr = new boolean[arr.length];
 
         for (int i = 0; i < arr.length; i++) {
@@ -61,19 +83,19 @@ class LabList extends ArrayList<Entry> {
         return resultArr;
     }
 
-    public Entry keyDirectSearch(String key) throws NoSuchElementException {
-        for (int i = 0; i < this.size(); i++) {
-            if (this.get(i).getKey().equals(key)) {
-                return this.get(i);
+    Entry keyDirectSearch(String key) throws NoSuchElementException {
+        for (Entry entry : this) {
+            if (entry.getKey().equals(key)) {
+                return entry;
             }
         }
         return null;
     }
 
-    public Entry keyBinarySearch(String key) throws NoSuchElementException {
+    Entry keyBinarySearch(String key) throws NoSuchElementException {
         int compare;
         int left = 0;
-        int right = this.size()-1;
+        int right = this.size() - 1;
         int result = left;
 
         while ((compare = this.get(result).getKey().compareTo(key)) != 0) {
@@ -88,5 +110,52 @@ class LabList extends ArrayList<Entry> {
             }
         }
         return this.get(result);
+    }
+
+    private static void writeFile(int queue) {
+        OutputStream fis = null;
+        try {
+            fis = new FileOutputStream(file);
+            try {
+                fis.write((byte) Integer.toString(queue).toCharArray()[0]);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                assert fis != null;
+                fis.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private static void readFile() {
+        InputStream fis = null;
+        Character symbol = 0;
+        try {
+            fis = new FileInputStream(file);
+            try {
+                symbol = (char) fis.read();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            queue = Integer.parseInt(symbol.toString());
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            queue = 0;
+                writeFile(queue);
+        } finally {
+            try {
+                if (fis != null) {
+                    fis.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

@@ -58,7 +58,7 @@ public class Parser {
         }
     }
 
-    public void performTableStep(Token token, String word) {
+    private void performTableStep(Token token, String word) {
         if (word.length() > 0) {
 
             if (isNumeric(word)) {
@@ -75,11 +75,11 @@ public class Parser {
         addToken(token);
     }
 
-    public void addToken(Token token) {
+    private void addToken(Token token) {
         lexemeTable.add(token);
     }
 
-    public void addToLexemeSet(Token token) {
+    private void addToLexemeSet(Token token) {
         if (token.getTitle().equals("CONSTANT")) {
             constantList.add(token);
         } else {
@@ -89,21 +89,22 @@ public class Parser {
         }
     }
 
-    @Override
-    public String toString() {
-        String result = "";
-        for (Token token : this.lexemeTable) {
-            result += token.toString() + "\n";
-        }
-        return result;
-    }
 
-    public static boolean isNumeric(String str) {
+    private static boolean isNumeric(String str) {
         try {
             double test = Double.parseDouble(str);
         } catch (NumberFormatException nfe) {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder result = new StringBuilder();
+        for (Token token : this.lexemeTable) {
+            result.append(token.toString()).append("\n");
+        }
+        return result.toString();
     }
 }

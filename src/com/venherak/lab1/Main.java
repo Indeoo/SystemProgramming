@@ -13,6 +13,8 @@ public class Main {
             list.add(new Entry("Badko", 80));
             list.add(new Entry("Dumko", 80));
             list.add(new Entry("bGAzkp", 80));
+            list.add(new Entry("GAV", 80));
+            list.add(new Entry("GAB", 5));
 
             System.out.print("Original list: ");
             System.out.println(list.toString());
@@ -30,19 +32,9 @@ public class Main {
             System.out.println(list.keyBinarySearch("Bilyk").toString());
 
             System.out.println();
-            System.out.println("Looking for coincidence... Firstly");
-            System.out.println(list.maxCoincidence("bGAzkp"));
+            System.out.println("Looking for coincidence...");
+            System.out.println(list.maxCoincidence("gaz"));
 
             System.out.println();
-
-            System.out.println("Removing element with bGAzkp key");
-            list.remove(list.keyDirectSearch("bGAzkp"));
-            System.out.println();
-
-            System.out.println("Looking for coincidence... Secondly");
-            System.out.println(list.maxCoincidence("bGAzkp"));
-
-            System.out.println("Looking for coincidence... Thirdly");
-            System.out.println(list.maxCoincidence("bGAzkp"));
         }
 }

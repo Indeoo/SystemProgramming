@@ -7,13 +7,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Main {
-    static String expression = "int main (void) {float b,a[13];int n;...}";
 
-    static Set<Token> delimiterList;
-    static Set<Token> operatorList;
-    static Set<Token> keywordList;
+    private static Set<Token> delimiterList;
+    private static Set<Token> operatorList;
+    private static Set<Token> keywordList;
 
     public static void main(String[] args) {
+        String expression = "int main (void) {float b,a[13];int n;...}";
         System.out.println(expression);
 
         getCAlphabet();
@@ -25,7 +25,7 @@ public class Main {
         System.out.println(parser.toString());
     }
 
-    public static void getCAlphabet() {
+    private static void getCAlphabet() {
         delimiterList = new HashSet<>();
 
         delimiterList.add(new Token(" ", "DELIMITER"));
