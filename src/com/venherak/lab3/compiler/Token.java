@@ -3,19 +3,19 @@ package com.venherak.lab3.compiler;
 public class Token {
 
     private String sign;
-    private String title;
+    private String type;
 
-    public Token(String sign, String title) {
+    public Token(String sign, String type) {
         this.sign = sign;
-        this.title = title;
+        this.type = type;
     }
 
     String getSign() {
         return sign;
     }
 
-    String getTitle() {
-        return title;
+    String getType() {
+        return type;
     }
 
     @Override
@@ -25,14 +25,14 @@ public class Token {
 
     @Override
     public int hashCode() {
-        return sign.hashCode() + title.hashCode();
+        return sign.hashCode() + type.hashCode();
     }
 
     @Override
     public String toString() {
         if (sign.equals(" ")) {
-            return title + ":    " + "' '";
+            return type + ":    " + "' '";
         }
-        return title + ":    " + sign;
+        return type + ":    " + sign;
     }
 }

@@ -33,37 +33,21 @@ public class Parser {
     public void parseCode() {
         char[] chars = code.toCharArray();
         String word = "";
-        Token token;
         for (Character letter : chars) {
             word += letter;
             if (checkIfAllowedString(letter.toString())) {
-                token = new Token(word, KEYWORD_TOKEN);
-                if (keyWordList.contains(token)) {
-                    word = word.replace(word, "");
-                    performTableStep(word);
-                    addToken(token);
-                    word = "";
-                    continue;
-                }
-                token = new Token(letter.toString(), DELIMITER_TOKEN);
-                if (delimiterList.contains(token)) {
+                boolean operation = operationList.contains(new Token(letter.toString(), OPERATOR_TOKEN));
+                boolean delimiter = delimiterList.contains(new Token(letter.toString(), DELIMITER_TOKEN));
+                if ((delimiter || operation)) {
                     word = word.replace(letter.toString(), "");
                     performTableStep(word);
-                    addToken(token);
-                    word = "";
-                    continue;
-                }
-                token = new Token(letter.toString(), OPERATOR_TOKEN);
-                if (operationList.contains(token)) {
-                    word = word.replace(letter.toString(), "");
-                    performTableStep(word);
-                    addToken(token);
+                    addTokenToLexemeList(findTokenBySign(letter.toString()));
                     word = "";
                 }
             } else {
                 word = word.replace(letter.toString(), "");
                 performTableStep(word);
-                word = word.replace(word, "");
+                word = "";
                 lexemeTable.add(new Token(letter.toString(), UNEXPECTED_TOKEN));
             }
         }
@@ -73,13 +57,31 @@ public class Parser {
         concatNeighborOperators();
     }
 
+    private void performTableStep(String word) {
+        if (keyWordList.contains(new Token(word, KEYWORD_TOKEN))) {
+            addTokenToLexemeList(new Token(word, KEYWORD_TOKEN));
+        } else {
+            if (word.length() > 0) {
+                if (checkIfNumericString(word)) {
+                    addTokenToLexemeList(new Token(word, CONSTANT_TOKEN));
+                } else {
+                    if (checkIfNumericString(word.substring(0, 1))) {
+                        addTokenToLexemeList(new Token(word, UNKNOWN_TOKEN));
+                    } else {
+                        addTokenToLexemeList(new Token(word, IDENTIFIER_TOKEN));
+                    }
+                }
+            }
+        }
+    }
+
     private void concatNeighborOperators() {
         Token token;
         Token prevToken = new Token("", "");
         Stack stack = new Stack();
         for (int i = 0; i < lexemeTable.size(); i++) {
             token = lexemeTable.get(i);
-            if (token.getTitle().equals(OPERATOR_TOKEN) && prevToken.getTitle().equals(OPERATOR_TOKEN) && checkTokenByString(prevToken.getSign() + token.getSign())) {
+            if (token.getType().equals(OPERATOR_TOKEN) && prevToken.getType().equals(OPERATOR_TOKEN) && checkTokenByString(prevToken.getSign() + token.getSign())) {
                 String doubleOperator = prevToken.getSign() + token.getSign();
                 lexemeTable.set(i, new Token(doubleOperator, OPERATOR_TOKEN));
                 stack.push(i - 1);
@@ -91,30 +93,16 @@ public class Parser {
         }
     }
 
-    private void performTableStep(String word) {
-        if (word.length() > 0) {
-            if (checkIfNumericString(word)) {
-                addToken(new Token(word, CONSTANT_TOKEN));
-            } else {
-                if (checkIfNumericString(word.substring(0, 1))) {
-                    addToken(new Token(word, UNKNOWN_TOKEN));
-                } else {
-                    addToken(new Token(word, IDENTIFIER_TOKEN));
-                }
-            }
-        }
-    }
-
-    private void addToken(Token token) {
+    private void addTokenToLexemeList(Token token) {
         lexemeTable.add(token);
         addToLexemeSet(token);
     }
 
     private void addToLexemeSet(Token token) {
-        if (token.getTitle().equals(CONSTANT_TOKEN)) {
+        if (token.getType().equals(CONSTANT_TOKEN)) {
             constantList.add(token);
         } else {
-            if (token.getTitle().equals(IDENTIFIER_TOKEN)) {
+            if (token.getType().equals(IDENTIFIER_TOKEN)) {
                 identifierList.add(token);
             }
         }
@@ -144,5 +132,19 @@ public class Parser {
             }
         }
         return false;
+    }
+
+    private Token findTokenBySign(String string) {
+        for (Token token : operationList) {
+            if (token.getSign().equals(string)) {
+                return token;
+            }
+        }
+        for (Token token : delimiterList) {
+            if (token.getSign().equals(string)) {
+                return token;
+            }
+        }
+        return null;
     }
 }
