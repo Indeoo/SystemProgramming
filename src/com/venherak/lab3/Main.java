@@ -13,7 +13,9 @@ public class Main {
     private static Set<Token> keywordList;
 
     public static void main(String[] args) {
-        String expression = "int main (void) {float b,a[13];int n;...}";
+        String expression = "int main (void) {float b,a[13];int n;..+=.}==;+kekfor for 1for f+1 i++ i++; f@or n3;3n;123123";
+        //String expression = "int main (void) {flo_at b,a[13];int 3n...8968sd6f873;3;n;n3}";
+       // String expression = "((c*d)(s*a)(1*s)+1)(a*b) i++";
         System.out.println(expression);
 
         getCAlphabet();
@@ -31,6 +33,7 @@ public class Main {
         delimiterList.add(new Token(" ", "DELIMITER"));
         delimiterList.add(new Token(",", "DELIMITER"));
         delimiterList.add(new Token(";", "DELIMITER"));
+        delimiterList.add(new Token(" ", "DELIMITER"));
         delimiterList.add(new Token(".", "DELIMITER"));
         delimiterList.add(new Token("{", "DELIMITER"));
         delimiterList.add(new Token("}", "DELIMITER"));
@@ -42,23 +45,38 @@ public class Main {
         keywordList = new HashSet<>();
 
         keywordList.add(new Token("int", "KEYWORD"));
+        keywordList.add(new Token("char", "KEYWORD"));
+        keywordList.add(new Token("short", "KEYWORD"));
+        keywordList.add(new Token("int", "KEYWORD"));
+        keywordList.add(new Token("long", "KEYWORD"));
+        keywordList.add(new Token("signed", "KEYWORD"));
+        keywordList.add(new Token("unsigned", "KEYWORD"));
         keywordList.add(new Token("float", "KEYWORD"));
-        keywordList.add(new Token("string", "KEYWORD"));
+        keywordList.add(new Token("double", "KEYWORD"));
         keywordList.add(new Token("void", "KEYWORD"));
         keywordList.add(new Token("return", "KEYWORD"));
         keywordList.add(new Token("static", "KEYWORD"));
         keywordList.add(new Token("if", "KEYWORD"));
+        keywordList.add(new Token("else", "KEYWORD"));
         keywordList.add(new Token("for", "KEYWORD"));
+        keywordList.add(new Token("do", "KEYWORD"));
+        keywordList.add(new Token("while", "KEYWORD"));
 
         operatorList = new HashSet<>();
 
-        operatorList.add(new Token("+", "OPERATION"));
-        operatorList.add(new Token("-", "OPERATION"));
-        operatorList.add(new Token("*", "OPERATION"));
-        operatorList.add(new Token("/", "OPERATION"));
-        operatorList.add(new Token(">", "OPERATION"));
-        operatorList.add(new Token("<", "OPERATION"));
-        operatorList.add(new Token("=", "OPERATION"));
-        operatorList.add(new Token("==", "OPERATION"));
+        operatorList.add(new Token("+", "OPERATOR"));
+        operatorList.add(new Token("-", "OPERATOR"));
+        operatorList.add(new Token("*", "OPERATOR"));
+        operatorList.add(new Token("/", "OPERATOR"));
+        operatorList.add(new Token(">", "OPERATOR"));
+        operatorList.add(new Token("<", "OPERATOR"));
+        operatorList.add(new Token("=", "OPERATOR"));
+        operatorList.add(new Token("==", "OPERATOR"));
+        operatorList.add(new Token("+=", "OPERATOR"));
+        operatorList.add(new Token("*=", "OPERATOR"));
+        operatorList.add(new Token("/=", "OPERATOR"));
+        operatorList.add(new Token("++", "OPERATOR"));
+        operatorList.add(new Token("--", "OPERATOR"));
+
     }
 }

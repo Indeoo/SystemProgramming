@@ -14,6 +14,12 @@ public class Parser {
     private List<Token> lexemeTable;
     private String code;
 
+    private static final String UNKNOWN_TOKEN = "Unknown";
+    private static final String IDENTIFIER_TOKEN = "IDENTIFIER";
+    private static final String OPERATOR_TOKEN = "OPERATOR";
+    private static final String DELIMITER_TOKEN = "DELIMITER";
+    private static final String CONSTANT_TOKEN = "CONSTANT";
+
     public Parser(String code, Set<Token> delimiterList, Set<Token> operationList, Set<Token> keyWordList) {
         this.code = code;
 
@@ -31,48 +37,70 @@ public class Parser {
         Token token;
         for (Character letter : chars) {
             word += letter;
-
-            token = new Token(word, "KEYWORD");
-            if (keyWordList.contains(token)) {
-                word = word.replace(word, "");
-                performTableStep(token, word);
-                word = "";
-                continue;
-            }
-            token = new Token(letter.toString(), "DELIMITER");
-            if (delimiterList.contains(token)) {
+            if (checkIfAllowedString(letter.toString())) {
+                token = new Token(word, "KEYWORD");
+                if (keyWordList.contains(token)) {
+                    word = word.replace(word, "");
+                    performTableStep(word);
+                    addToken(token);
+                    word = "";
+                    continue;
+                }
+                token = new Token(letter.toString(), DELIMITER_TOKEN);
+                if (delimiterList.contains(token)) {
+                    word = word.replace(letter.toString(), "");
+                    performTableStep(word);
+                    addToken(token);
+                    word = "";
+                    continue;
+                }
+                token = new Token(letter.toString(), OPERATOR_TOKEN);
+                if (operationList.contains(token)) {
+                    word = word.replace(letter.toString(), "");
+                    performTableStep(word);
+                    addToken(token);
+                    word = "";
+                }
+            } else {
                 word = word.replace(letter.toString(), "");
-                performTableStep(token, word);
-                word = "";
-                continue;
-            }
-            token = new Token(letter.toString(), "OPERATOR");
-            if (operationList.contains(token)) {
-                word = word.replace(letter.toString(), "");
-                performTableStep(token, word);
-                word = "";
+                token = new Token(letter.toString(), "UNEXPECTED SYMBOL");
+                lexemeTable.add(token);
             }
         }
         if (word.length() != 0) {
-            addToken(new Token(word, "IDENTIFIER"));
+            performTableStep(word);
         }
+        concatNeighborOperators();
     }
 
-    private void performTableStep(Token token, String word) {
+    private void concatNeighborOperators() {
+        Token token;
+        Token prevToken = new Token("filler", "filler");
+        for (int i = 0; i < lexemeTable.size(); i++) {
+            token = lexemeTable.get(i);
+            if (token.getTitle().equals(OPERATOR_TOKEN) && prevToken.getTitle().equals(OPERATOR_TOKEN)) {
+                String doubleOperator = token.getSign() + prevToken.getSign();
+                lexemeTable.set(i, new Token(doubleOperator, OPERATOR_TOKEN));
+                lexemeTable.remove(i - 1);
+            }
+            prevToken = token;
+        }
+    }
+    private void performTableStep(String word) {
         if (word.length() > 0) {
-
-            if (isNumeric(word)) {
-                addToken(new Token(word, "CONSTANT"));
-                addToLexemeSet(new Token(word, "CONSTANT"));
+            if (checkIfNumericString(word)) {
+                System.out.println(word);
+                addToken(new Token(word, CONSTANT_TOKEN));
+                addToLexemeSet(new Token(word, CONSTANT_TOKEN));
             } else {
-                //if(isNumeric(word.substring(0,1))) {
-                //} else {
-                addToken(new Token(word, "IDENTIFIER"));
-                addToLexemeSet(new Token(word, "IDENTIFIER"));
-                //}
+                if (checkIfNumericString(word.substring(0, 1))) {
+                    addToken(new Token(word, UNKNOWN_TOKEN));
+                } else {
+                    addToken(new Token(word, IDENTIFIER_TOKEN));
+                    addToLexemeSet(new Token(word, IDENTIFIER_TOKEN));
+                }
             }
         }
-        addToken(token);
     }
 
     private void addToken(Token token) {
@@ -80,31 +108,36 @@ public class Parser {
     }
 
     private void addToLexemeSet(Token token) {
-        if (token.getTitle().equals("CONSTANT")) {
+        if (token.getTitle().equals(CONSTANT_TOKEN)) {
             constantList.add(token);
         } else {
-            if (token.getTitle().equals("IDENTIFIER")) {
+            if (token.getTitle().equals(IDENTIFIER_TOKEN)) {
                 identifierList.add(token);
             }
         }
     }
 
-
-    private static boolean isNumeric(String str) {
-        try {
-            double test = Double.parseDouble(str);
-        } catch (NumberFormatException nfe) {
-            return false;
-        }
-        return true;
-    }
-
     @Override
     public String toString() {
-        StringBuilder result = new StringBuilder();
+        StringBuilder result = new StringBuilder("");
         for (Token token : this.lexemeTable) {
-            result.append(token.toString()).append("\n");
+            result.append(token.toString()).append( "\n");
         }
         return result.toString();
+    }
+
+    private boolean checkIfNumericString(String str) {
+        return str.matches("^[0-9]+$");
+    }
+    private boolean checkIfAllowedString(String string) {
+        return string.matches("[a-zA-Z0-9=+*/%;&|\\[\\]_(),\\\"'.<> {}-]+$");
+    }
+    boolean checkToken(Token tokenIN) {
+        for (Token token : lexemeTable) {
+            if (token.getSign().equals(tokenIN.getSign())) {
+                return true;
+            }
+        }
+        return false;
     }
 }

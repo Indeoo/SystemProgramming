@@ -10,13 +10,17 @@ public class Token {
         this.title = title;
     }
 
+    String getSign() {
+        return sign;
+    }
+
     String getTitle() {
         return title;
     }
 
     @Override
     public boolean equals(Object o) {
-        return o.hashCode() == this.hashCode();
+        return (o.getClass().equals(this.getClass()) && o.hashCode() == this.hashCode());
     }
 
     @Override
