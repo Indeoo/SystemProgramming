@@ -13,9 +13,7 @@ public class Main {
     private static Set<Token> keywordList;
 
     public static void main(String[] args) {
-        //String expression = "a+=b[n]";
         String expression = "int main (void) {flo_at b,a[13];int 3n...8968sd6f873;3;n;n3}@;i++;b+=sd123;123";
-       // String expression = "((c*d)(s*a)(1*s)+1)(a*b) i++";
         System.out.println(expression);
 
         getCAlphabet();
