@@ -1,7 +1,7 @@
 package com.venherak.lab3;
 
-import com.venherak.lab3.compiler.Parser;
-import com.venherak.lab3.compiler.Token;
+import com.venherak.lab3.lexical.Parser;
+import com.venherak.lab3.lexical.Token;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -13,7 +13,7 @@ public class Main {
     private static Set<Token> keywordList;
 
     public static void main(String[] args) {
-        String expression = "int main (void) {flo_at b,a[13];int 3n...8968sd6f873;3;n;n3}@;i++;b+=sd123;123";
+        String expression = "b+=a[n]";
         System.out.println(expression);
 
         getCAlphabet();

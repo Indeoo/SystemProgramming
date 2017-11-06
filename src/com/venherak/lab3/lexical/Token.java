@@ -1,4 +1,4 @@
-package com.venherak.lab3.compiler;
+package com.venherak.lab3.lexical;
 
 public class Token {
 
