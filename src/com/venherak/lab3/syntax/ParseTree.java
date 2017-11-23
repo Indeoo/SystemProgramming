@@ -22,9 +22,10 @@ public class ParseTree {
     }
 
     public void formTree() {
+        SymbolSequence symbolSequence = new SymbolSequence();
         for (int i = terminals.size() - 1; i >= 0; i--) {
             for (int j = i; j < terminals.size(); j++) {
-                SymbolSequence symbolSequence = new SymbolSequence();
+                symbolSequence = new SymbolSequence();
                 for (int d = terminals.size() - j; d > 0; d--) {
                     symbolSequence.add(terminals.get(i + terminals.size() - j - d));
                 }
@@ -40,7 +41,7 @@ public class ParseTree {
             }
         }
         for (Terminal terminal : terminals) {
-            if (terminal.getParent() == null) {
+            if (terminal.getRoot() != language.getRoot()) {
                 System.out.println(terminal + " WRONG");
             }
         }

@@ -49,7 +49,7 @@ public class Language {
         this.root = root;
     }
 
-    public void viewRuels() {
+    public void viewRules() {
         System.out.println("Rules:");
         for (Rule rule : rules) {
             System.out.println(rule);

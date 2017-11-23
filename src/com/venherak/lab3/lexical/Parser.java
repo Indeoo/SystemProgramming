@@ -12,11 +12,11 @@ public class Parser {
     private String code;
 
     private static final String UNKNOWN_TOKEN    = "UNKNOWN";
-    private static final String IDENTIFIER_TOKEN = "IDENTIFIER";
-    private static final String OPERATOR_TOKEN   = "OPERATOR";
-    private static final String DELIMITER_TOKEN  = "DELIMITER";
+    private static final String IDENTIFIER_TOKEN = "Identifier";
+    private static final String OPERATOR_TOKEN   = "Operator";
+    private static final String DELIMITER_TOKEN  = "Delimiter";
     private static final String CONSTANT_TOKEN   = "CONSTANT";
-    private static final String KEYWORD_TOKEN    = "KEYWORD";
+    private static final String KEYWORD_TOKEN    = "Keyword";
     private static final String UNEXPECTED_TOKEN = "UNEXPECTED SYMBOL";
 
     public Parser(String code, Set<Token> delimiterSet, Set<Token> operationSet, Set<Token> keyWordSet) {
