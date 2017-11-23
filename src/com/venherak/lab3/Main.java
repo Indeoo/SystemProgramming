@@ -25,8 +25,8 @@ public class Main {
     private static NonTerminal root;
 
     public static void main(String[] args) {
-        String expression = "a+=b[n]";
-        System.out.println(expression);
+        String expression = "sdfa+=b[n]]]]";
+        System.out.println(expression + "\n");
 
         getCAlphabet();
 

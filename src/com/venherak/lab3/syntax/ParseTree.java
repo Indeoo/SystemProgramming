@@ -33,7 +33,17 @@ public class ParseTree {
                 }
             }
         }
-        terminals.get(0).getRoot().addParent(language.getRoot());
+        for (Terminal terminal : terminals) {
+            if (terminal.getParent() != null) {
+                terminal.getRoot().addParent(language.getRoot());
+                break;
+            }
+        }
+        for (Terminal terminal : terminals) {
+            if (terminal.getParent() == null) {
+                System.out.println(terminal + " WRONG");
+            }
+        }
     }
 
     private boolean transformByRule(SymbolSequence symbolSequence) {
@@ -75,6 +85,7 @@ public class ParseTree {
         Integer i = 0;
         viewTree(symbol, i);
     }
+
     public void viewTree(AbstractSymbol symbol, Integer i) {
         System.out.print(getLines(i) + symbol + "\n");
         i++;
@@ -88,7 +99,7 @@ public class ParseTree {
 
     String getLines(int i) {
         StringBuilder result = new StringBuilder();
-        for(int j = 0; j < i; j++) {
+        for (int j = 0; j < i; j++) {
             result.append("  |");
         }
         result.append("");
