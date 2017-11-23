@@ -153,4 +153,8 @@ public class Parser {
         allTokensSet.addAll(constantSet);
         return allTokensSet;
     }
+
+    public List<Token> getLexemeTableList() {
+        return lexemeTableList;
+    }
 }

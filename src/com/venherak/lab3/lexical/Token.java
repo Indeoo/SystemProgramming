@@ -10,11 +10,11 @@ public class Token {
         this.type = type;
     }
 
-    String getSign() {
+    public String getSign() {
         return sign;
     }
 
-    String getType() {
+    public String getType() {
         return type;
     }
 
