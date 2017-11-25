@@ -1,8 +1,11 @@
 package com.venherak.lab3.lexical;
 
+import com.venherak.lab3.Exceptions.WrongTokenException;
+import com.venherak.lab3.Language;
+
 import java.util.*;
 
-public class Parser {
+public class Tokenizer {
     private Set<Token> delimiterSet;
     private Set<Token> operationSet;
     private Set<Token> keyWordSet;
@@ -10,71 +13,79 @@ public class Parser {
     private Set<Token> constantSet;
     private List<Token> lexemeTableList;
     private String code;
+    private Language language;
 
-    private static final String UNKNOWN_TOKEN    = "UNKNOWN";
+    private static final String UNKNOWN_TOKEN = "UNKNOWN";
     private static final String IDENTIFIER_TOKEN = "Identifier";
-    private static final String OPERATOR_TOKEN   = "Operator";
-    private static final String DELIMITER_TOKEN  = "Delimiter";
-    private static final String CONSTANT_TOKEN   = "CONSTANT";
-    private static final String KEYWORD_TOKEN    = "Keyword";
+    private static final String OPERATOR_TOKEN = "Operator";
+    private static final String DELIMITER_TOKEN = "Delimiter";
+    private static final String CONSTANT_TOKEN = "CONSTANT";
+    private static final String KEYWORD_TOKEN = "Keyword";
+    private static final String TYPE_TOKEN = "Type";
+    private static final String BRACKET_TOKEN = "Bracket";
     private static final String UNEXPECTED_TOKEN = "UNEXPECTED SYMBOL";
 
-    public Parser(String code, Set<Token> delimiterSet, Set<Token> operationSet, Set<Token> keyWordSet) {
+    public Tokenizer(String code, Language language) {
         this.code = code;
         this.identifierSet = new HashSet<>();
         this.constantSet = new HashSet<>();
-        this.delimiterSet = delimiterSet;
-        this.operationSet = operationSet;
-        this.keyWordSet = keyWordSet;
+        this.delimiterSet = new HashSet<>();
+        this.operationSet = new HashSet<>();
+        this.keyWordSet = new HashSet<>();
+        this.language = language;
+        this.language.getLemexeAlphabet(delimiterSet, operationSet, keyWordSet);
         lexemeTableList = new ArrayList<>();
     }
 
-    public void parseCode() {
+    public void formTokens() throws WrongTokenException {
         char[] chars = code.toCharArray();
         String word = "";
         for (Character letter : chars) {
             word += letter;
-            if (checkIfAllowedString(letter.toString())) {
+            if (language.checkIfAllowedString(letter.toString())) {
                 boolean operation = operationSet.contains(new Token(letter.toString(), OPERATOR_TOKEN));
                 boolean delimiter = delimiterSet.contains(new Token(letter.toString(), DELIMITER_TOKEN));
-                if ((delimiter || operation)) {
+                boolean bracket = delimiterSet.contains(new Token(letter.toString(), BRACKET_TOKEN));
+
+                if ((delimiter || operation || bracket)) {
                     word = word.replace(letter.toString(), "");
                     performTableStep(word);
                     addTokenToLexemeList(findTokenBySign(letter.toString()));
                     word = "";
                 }
             } else {
-                word = word.replace(letter.toString(), "");
-                performTableStep(word);
-                word = "";
-                lexemeTableList.add(new Token(letter.toString(), UNEXPECTED_TOKEN));
+                throw new WrongTokenException("Wrong Token! " + new Token(letter.toString(), "WRONG TOKEN"));
             }
         }
         if (word.length() != 0) {
             performTableStep(word);
         }
-        concatNeighborOperators();
+        concatDoubleOperators();
     }
 
     private void performTableStep(String word) {
         if (keyWordSet.contains(new Token(word, KEYWORD_TOKEN))) {
             addTokenToLexemeList(new Token(word, KEYWORD_TOKEN));
         } else {
-            if (word.length() > 0) {
-                if (checkIfNumericString(word)) {
-                    addTokenToLexemeList(new Token(word, CONSTANT_TOKEN));
-                } else {
-                    if (checkIfNumericString(word.substring(0, 1))) {
-                        addTokenToLexemeList(new Token(word, UNKNOWN_TOKEN));
+            if (keyWordSet.contains(new Token(word, TYPE_TOKEN))) {
+                addTokenToLexemeList(new Token(word, TYPE_TOKEN));
+            } else {
+                if (word.length() > 0) {
+                    if (checkIfNumericString(word)) {
+                        addTokenToLexemeList(new Token(word, CONSTANT_TOKEN));
                     } else {
-                        addTokenToLexemeList(new Token(word, IDENTIFIER_TOKEN));
+                        if (checkIfNumericString(word.substring(0, 1))) {
+                            addTokenToLexemeList(new Token(word, UNKNOWN_TOKEN));
+                        } else {
+                            addTokenToLexemeList(new Token(word, IDENTIFIER_TOKEN));
+                        }
                     }
                 }
             }
         }
     }
 
-    private void concatNeighborOperators() {
+    private void concatDoubleOperators() {
         Token token;
         Token prevToken = new Token("", "");
         Stack<Integer> stack = new Stack<>();
@@ -109,21 +120,8 @@ public class Parser {
         }
     }
 
-    @Override
-    public String toString() {
-        StringBuilder result = new StringBuilder("");
-        for (Token token : this.lexemeTableList) {
-            result.append(token.toString()).append("\n");
-        }
-        return result.toString();
-    }
-
     private boolean checkIfNumericString(String str) {
         return str.matches("^[0-9]+$");
-    }
-
-    private boolean checkIfAllowedString(String string) {
-        return string.matches("[a-zA-Z0-9=+*/%;&|\\[\\]_(),\\\"'.<> {}-]+$");
     }
 
     private boolean checkTokenByString(String string) {
@@ -156,5 +154,14 @@ public class Parser {
 
     public List<Token> getLexemeTableList() {
         return lexemeTableList;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder result = new StringBuilder("");
+        for (Token token : this.lexemeTableList) {
+            result.append(token.toString()).append("\n");
+        }
+        return result.toString();
     }
 }

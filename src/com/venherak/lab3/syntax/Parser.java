@@ -1,5 +1,7 @@
 package com.venherak.lab3.syntax;
 
+import com.venherak.lab3.Exceptions.SyntaxException;
+import com.venherak.lab3.Language;
 import com.venherak.lab3.lexical.Token;
 import com.venherak.lab3.syntax.alphabet.AbstractSymbol;
 import com.venherak.lab3.syntax.alphabet.NonTerminal;
@@ -9,11 +11,11 @@ import com.venherak.lab3.syntax.alphabet.Terminal;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ParseTree {
+public class Parser {
     private List<Terminal> terminals;
     private Language language;
 
-    public ParseTree(Language language, List<Token> tokens) {
+    public Parser(List<Token> tokens, Language language) {
         this.language = language;
         terminals = new ArrayList<>();
         for (Token token : tokens) {
@@ -21,8 +23,8 @@ public class ParseTree {
         }
     }
 
-    public void formTree() {
-        SymbolSequence symbolSequence = new SymbolSequence();
+    public void formTree() throws SyntaxException {
+        SymbolSequence symbolSequence;
         for (int i = terminals.size() - 1; i >= 0; i--) {
             for (int j = i; j < terminals.size(); j++) {
                 symbolSequence = new SymbolSequence();
@@ -32,6 +34,8 @@ public class ParseTree {
                 if (transformByRule(symbolSequence)) {
                     i++;
                 }
+                System.out.println(symbolSequence);
+                System.out.println(getHighTreeLayer(symbolSequence) + " \n");
             }
         }
         for (Terminal terminal : terminals) {
@@ -42,7 +46,7 @@ public class ParseTree {
         }
         for (Terminal terminal : terminals) {
             if (terminal.getRoot() != language.getRoot()) {
-                System.out.println(terminal + " WRONG");
+                throw new SyntaxException("Syntax error! " + terminal);
             }
         }
     }
@@ -98,7 +102,7 @@ public class ParseTree {
         i--;
     }
 
-    String getLines(int i) {
+    private String getLines(int i) {
         StringBuilder result = new StringBuilder();
         for (int j = 0; j < i; j++) {
             result.append("  |");
