@@ -17,7 +17,7 @@ public class LanguageC extends Language {
     }
 
     public void formRules() {
-        NonTerminal PROGRAM = new NonTerminal("Program");
+        NonTerminal STATEMENTS = new NonTerminal("Statements");
         NonTerminal STATEMENT = new NonTerminal("Statement");
         NonTerminal EXPRESSION = new NonTerminal("Expression");
         NonTerminal DELIMITER = new NonTerminal("Delimiter");
@@ -63,19 +63,26 @@ public class LanguageC extends Language {
         rule7.getRight().add(IDENTIFIER);
         rule7.getRight().add(new Terminal("+="));
         rule7.getRight().add(EXPRESSION);
-        rule7.getRight().add(new Terminal(";"));
+        //rule7.getRight().add(new Terminal(";"));
 
-        Rule rule8 = new Rule(PROGRAM, new SymbolSequence());
+        Rule rule8 = new Rule(STATEMENTS, new SymbolSequence());
         rule8.getRight().add(STATEMENT);
-        rule8.getRight().add(STATEMENT);
+        rule8.getRight().add(new Terminal(";"));
+        rule8.getRight().add(STATEMENTS);
 
-        ruleList.add(rule8);
+        Rule rule9 = new Rule(STATEMENTS, new SymbolSequence());
+        rule9.getRight().add(STATEMENT);
+        rule9.getRight().add(new Terminal(";"));
+
         ruleList.add(eRule1);
         ruleList.add(eRule2);
         ruleList.add(eRule3);
         ruleList.add(rule4);
         ruleList.add(rule5);
         ruleList.add(rule7);
+        ruleList.add(rule9);
+        ruleList.add(rule8);
+
         //ruleList.add(rule6);
         getRules().addAll(ruleList);
     }

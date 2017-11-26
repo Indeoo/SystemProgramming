@@ -31,27 +31,30 @@ public class Parser {
                 for (int d = terminals.size() - j; d > 0; d--) {
                     symbolSequence.add(terminals.get(i + terminals.size() - j - d));
                 }
-                if (transformByRule(symbolSequence)) {
+                if (transformSeqByRule(symbolSequence)) {
                     i++;
                 }
-                System.out.println(symbolSequence);
-                System.out.println(getHighTreeLayer(symbolSequence) + " \n");
+             //   System.out.println(symbolSequence);
+              //  System.out.println(getHighTreeLayer(symbolSequence) + " \n");
             }
         }
         for (Terminal terminal : terminals) {
             if (terminal.getParent() != null) {
-                terminal.getRoot().addParent(language.getRoot());
-                break;
+                if (terminal.getRoot().getLiteral().equals("Statements")) {
+                    terminal.getRoot().addParent(language.getRoot());
+                    break;
+                }
             }
         }
         for (Terminal terminal : terminals) {
-            if (terminal.getRoot() != language.getRoot()) {
-                throw new SyntaxException("Syntax error! " + terminal);
+            if (!terminal.getRoot().equals(language.getRoot())) {
+                throw new SyntaxException("Syntax error near " + terminal);
             }
         }
+
     }
 
-    private boolean transformByRule(SymbolSequence symbolSequence) {
+    private boolean transformSeqByRule(SymbolSequence symbolSequence) {
         symbolSequence = getHighTreeLayer(symbolSequence);
         for (Rule rule : language.getRules()) {
             if (rule.checkSequenceOnRule(symbolSequence)) {
@@ -99,7 +102,7 @@ public class Parser {
                 viewTree(symbol1, i);
             }
         }
-        i--;
+        //i--;
     }
 
     private String getLines(int i) {

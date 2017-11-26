@@ -8,7 +8,8 @@ import com.venherak.lab3.syntax.Parser;
 public class Main {
 
     public static void main(String[] args) {
-        String code = "ifif";
+
+        String code = "a+=b;";
         System.out.println(code + "\n");
 
         LanguageC language = new LanguageC();

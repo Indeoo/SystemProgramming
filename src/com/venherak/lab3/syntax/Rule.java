@@ -14,12 +14,17 @@ public class Rule {
     }
 
     public Rule(NonTerminal left, AbstractSymbol right) {
+        //this.right = new BackusNaur(right, 1);
         this.right = new SymbolSequence();
         this.right.add(right);
         this.left = left;
     }
 
     boolean checkSequenceOnRule(SymbolSequence symbolSequence) {
+       // System.out.println(right + "        " + symbolSequence);
+/*        for(AbstractSymbol symbol: SymbolSequence) {
+            if(symbol.)
+        }*/
         return symbolSequence.toString().equals(right.toString());
     }
 

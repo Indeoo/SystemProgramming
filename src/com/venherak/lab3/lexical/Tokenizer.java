@@ -15,7 +15,7 @@ public class Tokenizer {
     private String code;
     private Language language;
 
-    private static final String UNKNOWN_TOKEN = "UNKNOWN";
+    private static final String WRONG_TOKEN = "Wrong Identifier";
     private static final String IDENTIFIER_TOKEN = "Identifier";
     private static final String OPERATOR_TOKEN = "Operator";
     private static final String DELIMITER_TOKEN = "Delimiter";
@@ -54,7 +54,7 @@ public class Tokenizer {
                     word = "";
                 }
             } else {
-                throw new WrongTokenException("Wrong Token! " + new Token(letter.toString(), "WRONG TOKEN"));
+                throw new WrongTokenException("Wrong Token! " + new Token(letter.toString(), "SYMBOL IS NOT ALLOWED"));
             }
         }
         if (word.length() != 0) {
@@ -63,7 +63,7 @@ public class Tokenizer {
         concatDoubleOperators();
     }
 
-    private void performTableStep(String word) {
+    private void performTableStep(String word) throws WrongTokenException {
         if (keyWordSet.contains(new Token(word, KEYWORD_TOKEN))) {
             addTokenToLexemeList(new Token(word, KEYWORD_TOKEN));
         } else {
@@ -75,7 +75,8 @@ public class Tokenizer {
                         addTokenToLexemeList(new Token(word, CONSTANT_TOKEN));
                     } else {
                         if (checkIfNumericString(word.substring(0, 1))) {
-                            addTokenToLexemeList(new Token(word, UNKNOWN_TOKEN));
+                            addTokenToLexemeList(new Token(word, WRONG_TOKEN));
+                            throw new WrongTokenException("Wrong Token! " + new Token(word, WRONG_TOKEN));
                         } else {
                             addTokenToLexemeList(new Token(word, IDENTIFIER_TOKEN));
                         }
