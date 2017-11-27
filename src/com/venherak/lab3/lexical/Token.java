@@ -35,4 +35,12 @@ public class Token {
         }
         return type + ":    " + sign;
     }
+
+    public void setSign(String sign) {
+        this.sign = sign;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 }

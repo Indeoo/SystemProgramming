@@ -25,6 +25,7 @@ public class LanguageC extends Language {
         NonTerminal OPERATOR = new NonTerminal("Operator");
         NonTerminal CONSTANT = new NonTerminal("Constant");
         NonTerminal BRACKETS = new NonTerminal("Brackets");
+        NonTerminal StateOperator = new NonTerminal("StateOperator");
         getNonTerminals().add(STATEMENT);
         getNonTerminals().add(EXPRESSION);
         getNonTerminals().add(DELIMITER);
@@ -61,7 +62,7 @@ public class LanguageC extends Language {
         // rule6.getRight().add(DELIMITER);
         Rule rule7 = new Rule(STATEMENT, new SymbolSequence());
         rule7.getRight().add(IDENTIFIER);
-        rule7.getRight().add(new Terminal("+="));
+        rule7.getRight().add(StateOperator);
         rule7.getRight().add(EXPRESSION);
         //rule7.getRight().add(new Terminal(";"));
 
@@ -74,6 +75,27 @@ public class LanguageC extends Language {
         rule9.getRight().add(STATEMENT);
         rule9.getRight().add(new Terminal(";"));
 
+
+        Rule ruleBrackets = new Rule(EXPRESSION, new SymbolSequence());
+        ruleBrackets.getRight().add(CONSTANT);
+        ruleBrackets.getRight().add(OPERATOR);
+        ruleBrackets.getRight().add(new Terminal("("));
+        ruleBrackets.getRight().add(EXPRESSION);
+        ruleBrackets.getRight().add(new Terminal(")"));
+
+        Rule ruleBrackets2 = new Rule(EXPRESSION, new SymbolSequence());
+        ruleBrackets2.getRight().add(IDENTIFIER);
+        ruleBrackets2.getRight().add(OPERATOR);
+        ruleBrackets2.getRight().add(new Terminal("("));
+        ruleBrackets2.getRight().add(EXPRESSION);
+        ruleBrackets2.getRight().add(new Terminal(")"));
+
+
+        Rule ruleBrackets3 = new Rule(EXPRESSION, new SymbolSequence());
+        ruleBrackets3.getRight().add(EXPRESSION);
+        ruleBrackets3.getRight().add(OPERATOR);
+        ruleBrackets3.getRight().add(EXPRESSION);
+
         ruleList.add(eRule1);
         ruleList.add(eRule2);
         ruleList.add(eRule3);
@@ -82,6 +104,9 @@ public class LanguageC extends Language {
         ruleList.add(rule7);
         ruleList.add(rule9);
         ruleList.add(rule8);
+        ruleList.add(ruleBrackets);
+        ruleList.add(ruleBrackets2);
+        ruleList.add(ruleBrackets3);
 
         //ruleList.add(rule6);
         getRules().addAll(ruleList);
@@ -93,8 +118,12 @@ public class LanguageC extends Language {
                 getRules().add(new Rule(new NonTerminal("Identifier"), new Terminal(token)));
                 getTerminals().add(new Terminal(token.getSign()));
             }
-            if (token.getType().equals("Operator") && !token.getSign().equals("+=")) {
+            if (token.getType().equals("Operator")) {
                 getRules().add(new Rule(new NonTerminal("Operator"), new Terminal(token)));
+                getTerminals().add(new Terminal(token.getSign()));
+            }
+            if (token.getType().equals("StateOperator")) {
+                getRules().add(new Rule(new NonTerminal("StateOperator"), new Terminal(token)));
                 getTerminals().add(new Terminal(token.getSign()));
             }
             if (token.getType().equals("Constant")) {
@@ -158,10 +187,11 @@ public class LanguageC extends Language {
 
         //binary && assingment
         operatorList.add(new Token("=", "Operator"));
-        operatorList.add(new Token("==", "Operator"));
-        operatorList.add(new Token("+=", "Operator"));
-        operatorList.add(new Token("*=", "Operator"));
-        operatorList.add(new Token("/=", "Operator"));
+        operatorList.add(new Token("==", "StateOperator"));
+        operatorList.add(new Token("-=", "StateOperator"));
+        operatorList.add(new Token("+=", "StateOperator"));
+        operatorList.add(new Token("*=", "StateOperator"));
+        operatorList.add(new Token("/=", "StateOperator"));
 
         //unary
         operatorList.add(new Token("++", "Operator"));

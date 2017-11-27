@@ -18,8 +18,9 @@ public class Tokenizer {
     private static final String WRONG_TOKEN = "Wrong Identifier";
     private static final String IDENTIFIER_TOKEN = "Identifier";
     private static final String OPERATOR_TOKEN = "Operator";
+    private static final String STATE_OPERATOR_TOKEN = "StateOperator";
     private static final String DELIMITER_TOKEN = "Delimiter";
-    private static final String CONSTANT_TOKEN = "CONSTANT";
+    private static final String CONSTANT_TOKEN = "Constant";
     private static final String KEYWORD_TOKEN = "Keyword";
     private static final String TYPE_TOKEN = "Type";
     private static final String BRACKET_TOKEN = "Bracket";
@@ -61,6 +62,8 @@ public class Tokenizer {
             performTableStep(word);
         }
         concatDoubleOperators();
+
+
     }
 
     private void performTableStep(String word) throws WrongTokenException {
@@ -92,17 +95,33 @@ public class Tokenizer {
         Stack<Integer> stack = new Stack<>();
         for (int i = 0; i < lexemeTableList.size(); i++) {
             token = lexemeTableList.get(i);
+
             if (token.getType().equals(OPERATOR_TOKEN)
                     && prevToken.getType().equals(OPERATOR_TOKEN)
-                    && checkTokenByString(prevToken.getSign() + token.getSign())) {
+                    && checkTokenByString(prevToken.getSign() + token.getSign())
+                    && !token.getSign().equals("=")) {
                 String doubleOperator = prevToken.getSign() + token.getSign();
                 lexemeTableList.set(i, new Token(doubleOperator, OPERATOR_TOKEN));
                 stack.push(i - 1);
+            } else {
+                if (token.getType().equals(OPERATOR_TOKEN)
+                        && prevToken.getType().equals(OPERATOR_TOKEN)
+                        && checkTokenByString(prevToken.getSign() + token.getSign())) {
+                    String doubleOperator = prevToken.getSign() + token.getSign();
+                    lexemeTableList.set(i, new Token(doubleOperator, STATE_OPERATOR_TOKEN));
+                    stack.push(i - 1);
+                }
             }
             prevToken = token;
         }
         while (!stack.empty()) {
             lexemeTableList.remove((int) stack.pop());
+        }
+
+        for(Token token1: lexemeTableList) {
+            if(token1.getSign().equals("=")) {
+                token1.setType(STATE_OPERATOR_TOKEN);
+            }
         }
     }
 

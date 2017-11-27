@@ -34,8 +34,8 @@ public class Parser {
                 if (transformSeqByRule(symbolSequence)) {
                     i++;
                 }
-             //   System.out.println(symbolSequence);
-              //  System.out.println(getHighTreeLayer(symbolSequence) + " \n");
+                //System.out.println(symbolSequence);
+                //System.out.println(getHighTreeLayer(symbolSequence) + " \n");
             }
         }
         for (Terminal terminal : terminals) {
