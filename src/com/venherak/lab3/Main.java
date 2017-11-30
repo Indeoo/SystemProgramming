@@ -1,6 +1,7 @@
 package com.venherak.lab3;
 
 import com.venherak.lab3.Exceptions.SyntaxException;
+import com.venherak.lab3.languages.LanguagePascal;
 import com.venherak.lab3.lexical.Tokenizer;
 import com.venherak.lab3.Exceptions.WrongTokenException;
 import com.venherak.lab3.syntax.Parser;
@@ -8,12 +9,11 @@ import com.venherak.lab3.syntax.Parser;
 public class Main {
 
     public static void main(String[] args) {
-
-        String code = "a-=b[4*n-(a+a)+1];vsdasdn=asd*sda+(10*asdkl);";
+        String code = "if (a<c) then begin for i:=1 to n do begin end; end;";
         System.out.println(code + "\n");
 
-        code = code.replaceAll(" ", "");
-        LanguageC language = new LanguageC();
+        //code = code.replaceAll(" ", "");
+        LanguagePascal language = new LanguagePascal();
 
         Tokenizer tokenizer = new Tokenizer(code, language);
 

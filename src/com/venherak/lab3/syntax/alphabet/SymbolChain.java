@@ -2,7 +2,7 @@ package com.venherak.lab3.syntax.alphabet;
 
 import java.util.ArrayList;
 
-public class SymbolSequence extends ArrayList<AbstractSymbol> {
+public class SymbolChain extends ArrayList<AbstractSymbol> {
     int status = 0;
 
     @Override

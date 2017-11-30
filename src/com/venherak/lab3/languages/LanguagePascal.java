@@ -1,24 +1,26 @@
-package com.venherak.lab3;
+package com.venherak.lab3.languages;
 
+import com.venherak.lab3.Language;
 import com.venherak.lab3.lexical.Token;
 import com.venherak.lab3.syntax.Rule;
 import com.venherak.lab3.syntax.alphabet.NonTerminal;
-import com.venherak.lab3.syntax.alphabet.SymbolSequence;
+import com.venherak.lab3.syntax.alphabet.SymbolChain;
 import com.venherak.lab3.syntax.alphabet.Terminal;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public class LanguageC extends Language {
+public class LanguagePascal extends Language {
 
-    public LanguageC() {
+    public LanguagePascal() {
         super();
     }
 
     public void formRules() {
         NonTerminal STATEMENTS = new NonTerminal("Statements");
         NonTerminal STATEMENT = new NonTerminal("Statement");
+        NonTerminal ARRAYEXPRESSION = new NonTerminal("ArrayExpression");
         NonTerminal EXPRESSION = new NonTerminal("Expression");
         NonTerminal DELIMITER = new NonTerminal("Delimiter");
         NonTerminal IDENTIFIER = new NonTerminal("Identifier");
@@ -40,50 +42,61 @@ public class LanguageC extends Language {
         getTerminals().add(squareDelimRIght);
 
         List<Rule> ruleList = new ArrayList<>();
-        Rule eRule1 = new Rule(EXPRESSION, new SymbolSequence());
+        Rule eRule1 = new Rule(EXPRESSION, new SymbolChain());
         eRule1.getRight().add(IDENTIFIER);
-        Rule eRule2 = new Rule(EXPRESSION, new SymbolSequence());
+        Rule eRule2 = new Rule(EXPRESSION, new SymbolChain());
         eRule2.getRight().add(IDENTIFIER);
         eRule2.getRight().add(OPERATOR);
         eRule2.getRight().add(EXPRESSION);
-        Rule eRule3 = new Rule(EXPRESSION, new SymbolSequence());
+
+/*        Rule eRule3 = new Rule(EXPRESSION, new SymbolChain());
         eRule3.getRight().add(IDENTIFIER);
         eRule3.getRight().add(squareDelimLeft);
         eRule3.getRight().add(EXPRESSION);
-        eRule3.getRight().add(squareDelimRIght);
-        Rule rule4 = new Rule(EXPRESSION, new SymbolSequence());
+        eRule3.getRight().add(squareDelimRIght);*/
+
+        Rule eRule3 = new Rule(EXPRESSION, new SymbolChain());
+        eRule3.getRight().add(IDENTIFIER);
+        eRule3.getRight().add(ARRAYEXPRESSION);
+
+        Rule arrayRule = new Rule(ARRAYEXPRESSION, new SymbolChain());
+        arrayRule.getRight().add(squareDelimLeft);
+        arrayRule.getRight().add(EXPRESSION);
+        arrayRule.getRight().add(squareDelimRIght);
+
+        Rule rule4 = new Rule(EXPRESSION, new SymbolChain());
         rule4.getRight().add(CONSTANT);
         rule4.getRight().add(OPERATOR);
         rule4.getRight().add(EXPRESSION);
-        Rule rule5 = new Rule(EXPRESSION, new SymbolSequence());
+        Rule rule5 = new Rule(EXPRESSION, new SymbolChain());
         rule5.getRight().add(CONSTANT);
-        //Rule rule6 = new Rule(EXPRESSION, new SymbolSequence());
+        //Rule rule6 = new Rule(EXPRESSION, new SymbolChain());
         // rule6.getRight().add(EXPRESSION);
         // rule6.getRight().add(DELIMITER);
-        Rule rule7 = new Rule(STATEMENT, new SymbolSequence());
+        Rule rule7 = new Rule(STATEMENT, new SymbolChain());
         rule7.getRight().add(IDENTIFIER);
         rule7.getRight().add(StateOperator);
         rule7.getRight().add(EXPRESSION);
         //rule7.getRight().add(new Terminal(";"));
 
-        Rule rule8 = new Rule(STATEMENTS, new SymbolSequence());
+        Rule rule8 = new Rule(STATEMENTS, new SymbolChain());
         rule8.getRight().add(STATEMENT);
         rule8.getRight().add(new Terminal(";"));
         rule8.getRight().add(STATEMENTS);
 
-        Rule rule9 = new Rule(STATEMENTS, new SymbolSequence());
+        Rule rule9 = new Rule(STATEMENTS, new SymbolChain());
         rule9.getRight().add(STATEMENT);
         rule9.getRight().add(new Terminal(";"));
 
 
-        Rule ruleBrackets = new Rule(EXPRESSION, new SymbolSequence());
+        Rule ruleBrackets = new Rule(EXPRESSION, new SymbolChain());
         ruleBrackets.getRight().add(CONSTANT);
         ruleBrackets.getRight().add(OPERATOR);
         ruleBrackets.getRight().add(new Terminal("("));
         ruleBrackets.getRight().add(EXPRESSION);
         ruleBrackets.getRight().add(new Terminal(")"));
 
-        Rule ruleBrackets2 = new Rule(EXPRESSION, new SymbolSequence());
+        Rule ruleBrackets2 = new Rule(EXPRESSION, new SymbolChain());
         ruleBrackets2.getRight().add(IDENTIFIER);
         ruleBrackets2.getRight().add(OPERATOR);
         ruleBrackets2.getRight().add(new Terminal("("));
@@ -91,10 +104,15 @@ public class LanguageC extends Language {
         ruleBrackets2.getRight().add(new Terminal(")"));
 
 
-        Rule ruleBrackets3 = new Rule(EXPRESSION, new SymbolSequence());
+        Rule ruleBrackets3 = new Rule(EXPRESSION, new SymbolChain());
         ruleBrackets3.getRight().add(EXPRESSION);
         ruleBrackets3.getRight().add(OPERATOR);
         ruleBrackets3.getRight().add(EXPRESSION);
+
+        Rule ruleBrackets4 = new Rule(EXPRESSION, new SymbolChain());
+        ruleBrackets4.getRight().add(new Terminal("("));
+        ruleBrackets4.getRight().add((EXPRESSION));
+        ruleBrackets4.getRight().add(new Terminal(")"));
 
         ruleList.add(eRule1);
         ruleList.add(eRule2);
@@ -107,9 +125,12 @@ public class LanguageC extends Language {
         ruleList.add(ruleBrackets);
         ruleList.add(ruleBrackets2);
         ruleList.add(ruleBrackets3);
+        ruleList.add(arrayRule);
+        ruleList.add(ruleBrackets4);
 
         //ruleList.add(rule6);
         getRules().addAll(ruleList);
+
     }
 
     public void formTokenRules(List<Token> tokens) {
@@ -169,13 +190,16 @@ public class LanguageC extends Language {
         keywordList.add(new Token("void", "Type"));
         keywordList.add(new Token("boolean", "Type"));
 
-        keywordList.add(new Token("return", "KEYWORD"));
-        keywordList.add(new Token("static", "KEYWORD"));
-        keywordList.add(new Token("if", "KEYWORD"));
-        keywordList.add(new Token("else", "KEYWORD"));
-        keywordList.add(new Token("for", "KEYWORD"));
-        keywordList.add(new Token("do", "KEYWORD"));
-        keywordList.add(new Token("while", "KEYWORD"));
+        keywordList.add(new Token("return", "Keyword"));
+        keywordList.add(new Token("if", "Keyword"));
+        keywordList.add(new Token("else", "Keyword"));
+        keywordList.add(new Token("for", "Keyword"));
+        keywordList.add(new Token("do", "Keyword"));
+        keywordList.add(new Token("then", "Keyword"));
+        keywordList.add(new Token("while", "Keyword"));
+        keywordList.add(new Token("begin", "Keyword"));
+        keywordList.add(new Token("end", "Keyword"));
+        keywordList.add(new Token("to", "Keyword"));
 
         //binary
         operatorList.add(new Token("+", "Operator"));
@@ -184,21 +208,18 @@ public class LanguageC extends Language {
         operatorList.add(new Token("/", "Operator"));
         operatorList.add(new Token(">", "Operator"));
         operatorList.add(new Token("<", "Operator"));
+        operatorList.add(new Token(":", "Operator"));
 
         //binary && assingment
         operatorList.add(new Token("=", "Operator"));
-        operatorList.add(new Token("==", "StateOperator"));
         operatorList.add(new Token("-=", "StateOperator"));
         operatorList.add(new Token("+=", "StateOperator"));
         operatorList.add(new Token("*=", "StateOperator"));
         operatorList.add(new Token("/=", "StateOperator"));
-
-        //unary
-        operatorList.add(new Token("++", "Operator"));
-        operatorList.add(new Token("--", "Operator"));
+        operatorList.add(new Token(":=", "StateOperator"));
     }
 
     public boolean checkIfAllowedString(String string) {
-        return string.matches("[a-zA-Z0-9=+*/%;&|\\[\\]_(),\\\"'.<> {}-]+$");
+        return string.matches("[a-zA-Z0-9=+*/%;&:|\\[\\]_(),\\\"'.<> {}-]+$");
     }
 }
