@@ -9,7 +9,7 @@ public class Main {
 
     public static void main(String[] args) {
 
-        String code = "a-=b[4*n-(a+a)+1];vsdasdn=asd*sda+(10*asdkl);";
+        String code = "a-=b[4*n-(a+a)+1];                vsdasdn=asd*sda+(10*asdkl);";
         System.out.println(code + "\n");
 
         code = code.replaceAll(" ", "");
