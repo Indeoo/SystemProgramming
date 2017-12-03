@@ -5,7 +5,7 @@ import com.venherak.lab3.Language;
 import com.venherak.lab3.lexical.Token;
 import com.venherak.lab3.syntax.alphabet.AbstractSymbol;
 import com.venherak.lab3.syntax.alphabet.NonTerminal;
-import com.venherak.lab3.syntax.alphabet.SymbolSequence;
+import com.venherak.lab3.syntax.alphabet.SymbolChain;
 import com.venherak.lab3.syntax.alphabet.Terminal;
 
 import java.util.ArrayList;
@@ -24,42 +24,73 @@ public class Parser {
     }
 
     public void formTree() throws SyntaxException {
-        SymbolSequence symbolSequence;
+        SymbolChain symbolChain = null;
         for (int i = terminals.size() - 1; i >= 0; i--) {
             for (int j = i; j < terminals.size(); j++) {
-                symbolSequence = new SymbolSequence();
+                symbolChain = new SymbolChain();
                 for (int d = terminals.size() - j; d > 0; d--) {
-                    symbolSequence.add(terminals.get(i + terminals.size() - j - d));
+                    symbolChain.add(terminals.get(i + terminals.size() - j - d));
                 }
-                if (transformSeqByRule(symbolSequence)) {
+                if (transformSeqByRule(symbolChain)) {
                     i++;
                 }
-                //System.out.println(symbolSequence);
-                //System.out.println(getHighTreeLayer(symbolSequence) + " \n");
+              //  System.out.println(symbolChain);
+                //System.out.println(getHighTreeLayer(symbolChain) + " \n");
             }
         }
+
+       // System.out.println(getHighTreeLayer(symbolChain));
+      //  System.out.println(terminals);
+
+        List<SymbolChain> errorList = new ArrayList<>();
+        SymbolChain deathPenalty = new SymbolChain();
+
+        boolean flag = true;
         for (Terminal terminal : terminals) {
             if (terminal.getParent() != null) {
                 if (terminal.getRoot().getLiteral().equals("Statements")) {
                     terminal.getRoot().addParent(language.getRoot());
-                    break;
+                    flag = true;
+                } else {
+                    if (!terminal.getRoot().getLiteral().equals("ROOT")) {
+                        deathPenalty.add(terminal);
+                        if (flag) {
+                            errorList.add(deathPenalty);
+                            deathPenalty = new SymbolChain();
+                            flag = false;
+                        }
+                    }
+                }
+            } else {
+                deathPenalty.add(terminal);
+                if (flag) {
+                    errorList.add(deathPenalty);
+                    deathPenalty = new SymbolChain();
+                    flag = false;
                 }
             }
         }
-        for (Terminal terminal : terminals) {
-            if (!terminal.getRoot().equals(language.getRoot())) {
-                throw new SyntaxException("Syntax error near " + terminal);
-            }
+
+        if (errorList.size() > 0) {
+            throw new SyntaxException("Syntax errors: " + errorList);
         }
 
     }
 
-    private boolean transformSeqByRule(SymbolSequence symbolSequence) {
-        symbolSequence = getHighTreeLayer(symbolSequence);
+    String formErrors(SymbolChain symbols) {
+        String result = "";
+        for (AbstractSymbol symbol : symbols) {
+            result += symbol + "\n";
+        }
+        return result;
+    }
+
+    private boolean transformSeqByRule(SymbolChain symbolChain) {
+        symbolChain = getHighTreeLayer(symbolChain);
         for (Rule rule : language.getRules()) {
-            if (rule.checkSequenceOnRule(symbolSequence)) {
+            if (rule.checkSequenceOnRule(symbolChain)) {
                 NonTerminal nonTerminal = new NonTerminal(rule.getLeft().getLiteral());
-                for (AbstractSymbol symbol : symbolSequence) {
+                for (AbstractSymbol symbol : symbolChain) {
                     symbol.addParent(nonTerminal);
                 }
                 return true;
@@ -68,19 +99,19 @@ public class Parser {
         return false;
     }
 
-    SymbolSequence getRoots(SymbolSequence symbolSequence) {
-        SymbolSequence serviceSequence = new SymbolSequence();
-        for (AbstractSymbol symbol : symbolSequence) {
+    SymbolChain getRoots(SymbolChain symbolChain) {
+        SymbolChain serviceSequence = new SymbolChain();
+        for (AbstractSymbol symbol : symbolChain) {
             serviceSequence.add(symbol.getRoot());
         }
         return serviceSequence;
     }
 
-    SymbolSequence getHighTreeLayer(SymbolSequence symbolSequence) {
-        symbolSequence = getRoots(symbolSequence);
-        SymbolSequence serviceSequence = new SymbolSequence();
+    SymbolChain getHighTreeLayer(SymbolChain symbolChain) {
+        symbolChain = getRoots(symbolChain);
+        SymbolChain serviceSequence = new SymbolChain();
         AbstractSymbol prevSymbol = new Terminal("");
-        for (AbstractSymbol symbol : symbolSequence) {
+        for (AbstractSymbol symbol : symbolChain) {
             if (!prevSymbol.getRoot().equals(symbol.getRoot())) {
                 serviceSequence.add(symbol);
             }

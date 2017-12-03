@@ -1,6 +1,7 @@
 package com.venherak.lab2;
 
 import com.venherak.lab2.automate.Automate;
+import com.venherak.lab2.tree.ParseTree;
 
 public class Main {
     static String[] signals = {"dlm", "ltr", "ltr", "dlm", "ltr", "ltr", "ltr"};
@@ -18,15 +19,13 @@ public class Main {
 
         try {
             automate.performSignalArray(signals);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        try {
             automate.performSignal("ltr");
         } catch (Exception e) {
             e.printStackTrace();
         }
         System.out.println(automate.toString());
+
+        ParseTree parseTree = new ParseTree();
+        parseTree.print();
     }
 }
