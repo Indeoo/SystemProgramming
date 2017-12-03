@@ -1,6 +1,6 @@
-package com.venherak.lab3.syntax.alphabet;
+package com.venherak.compiler.syntax.alphabet;
 
-import com.venherak.lab3.lexical.Token;
+import com.venherak.compiler.lexical.Token;
 
 public class Terminal extends AbstractSymbol {
 

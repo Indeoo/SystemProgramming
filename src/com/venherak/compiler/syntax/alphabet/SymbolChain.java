@@ -1,20 +1,11 @@
-package com.venherak.lab3.syntax.alphabet;
+package com.venherak.compiler.syntax.alphabet;
 
-import com.venherak.lab3.syntax.Rule;
+import com.venherak.compiler.syntax.Rule;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class SymbolChain extends ArrayList<AbstractSymbol> {
-
-    @Override
-    public String toString() {
-        StringBuilder result = new StringBuilder();
-        for (AbstractSymbol symbol : this) {
-            result.append(symbol);
-        }
-        return result.toString();
-    }
 
     public SymbolChain getHighTreeLayer() {
         SymbolChain symbolChain = this.getRoots();
@@ -52,10 +43,11 @@ public class SymbolChain extends ArrayList<AbstractSymbol> {
     }
 
     public void addParent(NonTerminal nonTerminal) {
-        for(AbstractSymbol symbol: this) {
+        for (AbstractSymbol symbol : this) {
             symbol.addParent(nonTerminal);
         }
     }
+
     @Override
     public int hashCode() {
         return super.hashCode();
@@ -64,5 +56,14 @@ public class SymbolChain extends ArrayList<AbstractSymbol> {
     @Override
     public boolean equals(Object o) {
         return super.equals(o);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder result = new StringBuilder();
+        for (AbstractSymbol symbol : this) {
+            result.append(symbol);
+        }
+        return result.toString();
     }
 }

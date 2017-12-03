@@ -1,11 +1,11 @@
-package com.venherak.lab3.languages;
+package com.venherak.compiler.languages;
 
-import com.venherak.lab3.lexical.Token;
-import com.venherak.lab3.syntax.Rule;
-import com.venherak.lab3.syntax.alphabet.AbstractSymbol;
-import com.venherak.lab3.syntax.alphabet.NonTerminal;
-import com.venherak.lab3.syntax.alphabet.SymbolChain;
-import com.venherak.lab3.syntax.alphabet.Terminal;
+import com.venherak.compiler.lexical.Token;
+import com.venherak.compiler.syntax.Rule;
+import com.venherak.compiler.syntax.alphabet.AbstractSymbol;
+import com.venherak.compiler.syntax.alphabet.NonTerminal;
+import com.venherak.compiler.syntax.alphabet.SymbolChain;
+import com.venherak.compiler.syntax.alphabet.Terminal;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,7 +55,7 @@ public abstract class Language {
     public List<Rule> findRules(SymbolChain symbolChain) {
         List<Rule> rules = new ArrayList<>();
         for (Rule rule : getRules()) {
-            if (rule.backPart(symbolChain)) {
+            if (rule.checkBackPartCoincidence(symbolChain)) {
                 rules.add(rule);
             }
         }

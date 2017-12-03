@@ -1,18 +1,18 @@
-package com.venherak.lab3.languages;
+package com.venherak.compiler.languages;
 
-import com.venherak.lab3.lexical.Token;
-import com.venherak.lab3.syntax.Rule;
-import com.venherak.lab3.syntax.alphabet.NonTerminal;
-import com.venherak.lab3.syntax.alphabet.SymbolChain;
-import com.venherak.lab3.syntax.alphabet.Terminal;
+import com.venherak.compiler.lexical.Token;
+import com.venherak.compiler.syntax.Rule;
+import com.venherak.compiler.syntax.alphabet.NonTerminal;
+import com.venherak.compiler.syntax.alphabet.SymbolChain;
+import com.venherak.compiler.syntax.alphabet.Terminal;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public class LanguagePascal extends Language {
+public class LanguageC extends Language {
 
-    public LanguagePascal() {
+    public LanguageC() {
         super();
     }
 
@@ -113,14 +113,6 @@ public class LanguagePascal extends Language {
         ruleBrackets4.getRight().add((EXPRESSION));
         ruleBrackets4.getRight().add(new Terminal(")"));
 
-
-        Rule primitive = new Rule(EXPRESSION, new SymbolChain());
-        primitive.getRight().add(IDENTIFIER);
-        primitive.getRight().add(new Terminal("+"));
-        primitive.getRight().add(IDENTIFIER);
-
-
-        ruleList.add(primitive);
         ruleList.add(eRule1);
         ruleList.add(eRule2);
         ruleList.add(eRule3);
@@ -197,16 +189,13 @@ public class LanguagePascal extends Language {
         keywordList.add(new Token("void", "Type"));
         keywordList.add(new Token("boolean", "Type"));
 
-        keywordList.add(new Token("return", "Keyword"));
-        keywordList.add(new Token("if", "Keyword"));
-        keywordList.add(new Token("else", "Keyword"));
-        keywordList.add(new Token("for", "Keyword"));
-        keywordList.add(new Token("do", "Keyword"));
-        keywordList.add(new Token("then", "Keyword"));
-        keywordList.add(new Token("while", "Keyword"));
-        keywordList.add(new Token("begin", "Keyword"));
-        keywordList.add(new Token("end", "Keyword"));
-        keywordList.add(new Token("to", "Keyword"));
+        keywordList.add(new Token("return", "KEYWORD"));
+        keywordList.add(new Token("static", "KEYWORD"));
+        keywordList.add(new Token("if", "KEYWORD"));
+        keywordList.add(new Token("else", "KEYWORD"));
+        keywordList.add(new Token("for", "KEYWORD"));
+        keywordList.add(new Token("do", "KEYWORD"));
+        keywordList.add(new Token("while", "KEYWORD"));
 
         //binary
         operatorList.add(new Token("+", "Operator"));
@@ -215,18 +204,21 @@ public class LanguagePascal extends Language {
         operatorList.add(new Token("/", "Operator"));
         operatorList.add(new Token(">", "Operator"));
         operatorList.add(new Token("<", "Operator"));
-        operatorList.add(new Token(":", "Operator"));
 
         //binary && assingment
         operatorList.add(new Token("=", "Operator"));
+        operatorList.add(new Token("==", "StateOperator"));
         operatorList.add(new Token("-=", "StateOperator"));
         operatorList.add(new Token("+=", "StateOperator"));
         operatorList.add(new Token("*=", "StateOperator"));
         operatorList.add(new Token("/=", "StateOperator"));
-        operatorList.add(new Token(":=", "StateOperator"));
+
+        //unary
+        operatorList.add(new Token("++", "Operator"));
+        operatorList.add(new Token("--", "Operator"));
     }
 
     public boolean checkIfAllowedString(String string) {
-        return string.matches("[a-zA-Z0-9=+*/%;&:|\\[\\]_(),\\\"'.<> {}-]+$");
+        return string.matches("[a-zA-Z0-9=+*/%;&|\\[\\]_(),\\\"'.<> {}-]+$");
     }
 }

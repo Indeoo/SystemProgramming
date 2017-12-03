@@ -1,4 +1,4 @@
-package com.venherak.lab3.syntax.alphabet;
+package com.venherak.compiler.syntax.alphabet;
 
 import java.util.ArrayList;
 import java.util.List;

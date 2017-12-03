@@ -1,8 +1,8 @@
-package com.venherak.lab3.syntax;
+package com.venherak.compiler.syntax;
 
-import com.venherak.lab3.syntax.alphabet.AbstractSymbol;
-import com.venherak.lab3.syntax.alphabet.NonTerminal;
-import com.venherak.lab3.syntax.alphabet.SymbolChain;
+import com.venherak.compiler.syntax.alphabet.AbstractSymbol;
+import com.venherak.compiler.syntax.alphabet.NonTerminal;
+import com.venherak.compiler.syntax.alphabet.SymbolChain;
 
 public class Rule {
     private NonTerminal left;
@@ -23,6 +23,15 @@ public class Rule {
         return symbolChain.toString().equals(right.toString());
     }
 
+    public boolean checkBackPartCoincidence(SymbolChain symbols) {
+        for (int i = 0; i < symbols.size(); i++) {
+            if (!symbols.get(symbols.size() - i - 1).getLiteral().equals(right.get(right.size() - i - 1).getLiteral())) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public boolean checkSequenceOnToken(AbstractSymbol symbol) {
         for (AbstractSymbol symbol1 : getRight()) {
             if (symbol.getLiteral().equals(symbol1.getLiteral())) {
@@ -30,16 +39,6 @@ public class Rule {
             }
         }
         return false;
-    }
-
-    public boolean backPart(SymbolChain symbols) {
-        for(int i = 0; i < symbols.size(); i++) {
-            if (symbols.get(symbols.size() - i - 1).getLiteral().equals(right.get(right.size() - i - 1).getLiteral())) {
-            } else {
-                return false;
-            }
-        }
-        return true;
     }
 
     public boolean checkSequenceBeginWith(AbstractSymbol symbol) {

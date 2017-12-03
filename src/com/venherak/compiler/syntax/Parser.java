@@ -1,24 +1,31 @@
-package com.venherak.lab3.syntax;
+package com.venherak.compiler.syntax;
 
-import com.venherak.lab3.exceptions.SyntaxException;
-import com.venherak.lab3.languages.Language;
-import com.venherak.lab3.lexical.Token;
-import com.venherak.lab3.syntax.alphabet.AbstractSymbol;
-import com.venherak.lab3.syntax.alphabet.SymbolChain;
-import com.venherak.lab3.syntax.alphabet.Terminal;
+import com.venherak.compiler.exceptions.SyntaxException;
+import com.venherak.compiler.languages.Language;
+import com.venherak.compiler.lexical.Token;
+import com.venherak.compiler.syntax.alphabet.AbstractSymbol;
+import com.venherak.compiler.syntax.alphabet.SymbolChain;
+import com.venherak.compiler.syntax.alphabet.Terminal;
 
 import java.util.List;
 
 public class Parser {
     private SymbolChain terminals;
     private Language language;
+    private State state;
+    private List<State> states;
 
     public Parser(List<Token> tokens, Language language) {
         this.language = language;
-        terminals = new SymbolChain();
+        this.terminals = new SymbolChain();
         for (Token token : tokens) {
             terminals.add(new Terminal(token));
         }
+    }
+
+    public Parser(Language language) {
+        this.language = language;
+        terminals = new SymbolChain();
     }
 
     public void formTree() throws SyntaxException {
@@ -32,33 +39,32 @@ public class Parser {
                 if (symbolChain.reduceChainByRule(language.getRules())) {
                     i++;
                 }
-                //System.out.println(symbolChain);
-                //System.out.println(symbolChain.getHighTreeLayer() + " \n");
+                System.out.println(symbolChain);
+                System.out.println(symbolChain.getHighTreeLayer() + " \n");
             }
         }
-        System.out.println(terminals.getHighTreeLayer());
+        System.out.println("Higher Tree Layer: " + terminals.getHighTreeLayer());
         System.out.println();
         checkOnErrors();
     }
 
     private void checkOnErrors() throws SyntaxException {
         SymbolChain symbols = terminals.getHighTreeLayer();
-        StringBuilder errorMsg = new StringBuilder();
+        StringBuilder errorMsg = new StringBuilder("Syntax exception\n");
         SymbolChain errorSequence = new SymbolChain();
-        errorSequence.add(0, symbols.get(symbols.size() - 1));
+        errorSequence.add(symbols.get(symbols.size() - 1));
 
         if (symbols.size() > 1) {
             for (int i = symbols.size() - 1; i >= 0; i--) {
                 System.out.println(language.findRules(errorSequence));
                 if (language.findRules(errorSequence).size() == 0) {
-                    errorMsg.append(errorSequence.get(errorSequence.size() - 1)).append(" - EXTRA SYMBOL\n");
+                    errorMsg.append(errorSequence.get(errorSequence.size() - 1)).append(" - EXTRA SYMBOL(S)\n");
                     errorSequence = new SymbolChain();
                 } else {
                     errorSequence.add(0, symbols.get(i));
-                    System.out.println(errorSequence + "ASD");
                 }
             }
-            throw new SyntaxException("Syntax exception\n" + errorMsg);
+            throw new SyntaxException(errorMsg.toString());
         }
     }
 
@@ -67,7 +73,7 @@ public class Parser {
         viewTree(symbol, i);
     }
 
-    public void viewTree(AbstractSymbol symbol, Integer i) {
+    private void viewTree(AbstractSymbol symbol, Integer i) {
         System.out.print(getLines(i) + symbol + "\n");
         i++;
         if (symbol.getChildren().size() > 0) {

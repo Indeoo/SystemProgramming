@@ -1,4 +1,4 @@
-package com.venherak.lab3.syntax.alphabet;
+package com.venherak.compiler.syntax.alphabet;
 
 public class NonTerminal extends AbstractSymbol {
     public NonTerminal(String s) {
