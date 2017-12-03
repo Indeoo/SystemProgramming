@@ -16,7 +16,8 @@ public class Main {
         LanguagePascal language = new LanguagePascal();
 
         Tokenizer tokenizer = new Tokenizer(code, language);
-
+        language.viewRules();
+        System.out.println();
         try {
             tokenizer.formTokens();
 

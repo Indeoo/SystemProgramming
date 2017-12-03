@@ -1,7 +1,7 @@
 package com.venherak.lab3.syntax;
 
 import com.venherak.lab3.Exceptions.SyntaxException;
-import com.venherak.lab3.Language;
+import com.venherak.lab3.languages.Language;
 import com.venherak.lab3.lexical.Token;
 import com.venherak.lab3.syntax.alphabet.AbstractSymbol;
 import com.venherak.lab3.syntax.alphabet.NonTerminal;
@@ -34,8 +34,8 @@ public class Parser {
                 if (transformSeqByRule(symbolChain)) {
                     i++;
                 }
-              //  System.out.println(symbolChain);
-                //System.out.println(getHighTreeLayer(symbolChain) + " \n");
+               // System.out.println(symbolChain);
+               // System.out.println(getHighTreeLayer(symbolChain) + " \n");
             }
         }
 
@@ -48,7 +48,7 @@ public class Parser {
         boolean flag = true;
         for (Terminal terminal : terminals) {
             if (terminal.getParent() != null) {
-                if (terminal.getRoot().getLiteral().equals("Statements")) {
+                if (terminal.getRoot().getLiteral().equals("Statement")) {
                     terminal.getRoot().addParent(language.getRoot());
                     flag = true;
                 } else {
@@ -133,7 +133,6 @@ public class Parser {
                 viewTree(symbol1, i);
             }
         }
-        //i--;
     }
 
     private String getLines(int i) {

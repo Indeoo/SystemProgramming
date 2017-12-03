@@ -1,6 +1,5 @@
 package com.venherak.lab3.languages;
 
-import com.venherak.lab3.Language;
 import com.venherak.lab3.lexical.Token;
 import com.venherak.lab3.syntax.Rule;
 import com.venherak.lab3.syntax.alphabet.NonTerminal;
