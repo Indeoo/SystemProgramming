@@ -1,6 +1,5 @@
 package com.venherak.lab3.languages;
 
-import com.venherak.lab3.Language;
 import com.venherak.lab3.lexical.Token;
 import com.venherak.lab3.syntax.Rule;
 import com.venherak.lab3.syntax.alphabet.NonTerminal;
@@ -114,6 +113,14 @@ public class LanguagePascal extends Language {
         ruleBrackets4.getRight().add((EXPRESSION));
         ruleBrackets4.getRight().add(new Terminal(")"));
 
+
+        Rule primitive = new Rule(EXPRESSION, new SymbolChain());
+        primitive.getRight().add(IDENTIFIER);
+        primitive.getRight().add(new Terminal("+"));
+        primitive.getRight().add(IDENTIFIER);
+
+
+        ruleList.add(primitive);
         ruleList.add(eRule1);
         ruleList.add(eRule2);
         ruleList.add(eRule3);

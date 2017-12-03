@@ -1,4 +1,4 @@
-package com.venherak.lab3.Exceptions;
+package com.venherak.lab3.exceptions;
 
 public class WrongTokenException extends Exception {
 

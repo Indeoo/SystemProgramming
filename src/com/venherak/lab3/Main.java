@@ -1,18 +1,17 @@
 package com.venherak.lab3;
 
-import com.venherak.lab3.Exceptions.SyntaxException;
+import com.venherak.lab3.exceptions.SyntaxException;
 import com.venherak.lab3.languages.LanguagePascal;
 import com.venherak.lab3.lexical.Tokenizer;
-import com.venherak.lab3.Exceptions.WrongTokenException;
+import com.venherak.lab3.exceptions.WrongTokenException;
 import com.venherak.lab3.syntax.Parser;
 
 public class Main {
 
     public static void main(String[] args) {
-        String code = "if (a<c) then begin for i:=1 to n do begin end; end;";
+        String code = "c=a+b+";
         System.out.println(code + "\n");
 
-        //code = code.replaceAll(" ", "");
         LanguagePascal language = new LanguagePascal();
 
         Tokenizer tokenizer = new Tokenizer(code, language);
@@ -27,7 +26,7 @@ public class Main {
             language.viewRules();
             Parser parser = new Parser(tokenizer.getLexemeTableList(), language);
             parser.formTree();
-            parser.viewTree(language.getRoot());
+            parser.viewTree(parser.getTerminals().get(0).getRoot());
 
         } catch (WrongTokenException | SyntaxException e) {
             e.printStackTrace();

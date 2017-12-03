@@ -14,27 +14,32 @@ public class Rule {
     }
 
     public Rule(NonTerminal left, AbstractSymbol right) {
-        //this.right = new BackusNaur(right, 1);
         this.right = new SymbolChain();
         this.right.add(right);
         this.left = left;
     }
 
-    boolean checkSequenceOnRule(SymbolChain symbolChain) {
-       // System.out.println(right + "        " + symbolChain);
-/*        for(AbstractSymbol symbol: SymbolChain) {
-            if(symbol.)
-        }*/
+    public boolean checkSequenceOnRule(SymbolChain symbolChain) {
         return symbolChain.toString().equals(right.toString());
     }
 
     public boolean checkSequenceOnToken(AbstractSymbol symbol) {
-        for(AbstractSymbol symbol1: getRight()) {
-            if(symbol.getLiteral().equals(symbol1.getLiteral())) {
+        for (AbstractSymbol symbol1 : getRight()) {
+            if (symbol.getLiteral().equals(symbol1.getLiteral())) {
                 return true;
             }
         }
         return false;
+    }
+
+    public boolean backPart(SymbolChain symbols) {
+        for(int i = 0; i < symbols.size(); i++) {
+            if (symbols.get(symbols.size() - i - 1).getLiteral().equals(right.get(right.size() - i - 1).getLiteral())) {
+            } else {
+                return false;
+            }
+        }
+        return true;
     }
 
     public boolean checkSequenceBeginWith(AbstractSymbol symbol) {

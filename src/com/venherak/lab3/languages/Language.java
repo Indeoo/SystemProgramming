@@ -1,9 +1,10 @@
-package com.venherak.lab3;
+package com.venherak.lab3.languages;
 
 import com.venherak.lab3.lexical.Token;
 import com.venherak.lab3.syntax.Rule;
 import com.venherak.lab3.syntax.alphabet.AbstractSymbol;
 import com.venherak.lab3.syntax.alphabet.NonTerminal;
+import com.venherak.lab3.syntax.alphabet.SymbolChain;
 import com.venherak.lab3.syntax.alphabet.Terminal;
 
 import java.util.ArrayList;
@@ -45,6 +46,21 @@ public abstract class Language {
         return abstractSymbolList;
     }
 
+    public List<Rule> findRules(AbstractSymbol symbol) {
+        SymbolChain symbols = new SymbolChain();
+        symbols.add(symbol);
+        return findRules(symbols);
+    }
+
+    public List<Rule> findRules(SymbolChain symbolChain) {
+        List<Rule> rules = new ArrayList<>();
+        for (Rule rule : getRules()) {
+            if (rule.backPart(symbolChain)) {
+                rules.add(rule);
+            }
+        }
+        return rules;
+    }
     public List<Terminal> getTerminals() {
         return terminals;
     }

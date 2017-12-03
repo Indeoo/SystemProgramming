@@ -1,7 +1,7 @@
 package com.venherak.lab3.lexical;
 
-import com.venherak.lab3.Exceptions.WrongTokenException;
-import com.venherak.lab3.Language;
+import com.venherak.lab3.exceptions.WrongTokenException;
+import com.venherak.lab3.languages.Language;
 
 import java.util.*;
 
