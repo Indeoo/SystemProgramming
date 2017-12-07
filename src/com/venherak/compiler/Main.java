@@ -1,11 +1,17 @@
 package com.venherak.compiler;
 
 import com.venherak.compiler.exceptions.SyntaxException;
+import com.venherak.compiler.languages.Language;
+import com.venherak.compiler.languages.LanguageC;
 import com.venherak.compiler.languages.LanguageTest;
 import com.venherak.compiler.lexical.Tokenizer;
 import com.venherak.compiler.exceptions.WrongTokenException;
 import com.venherak.compiler.syntax.Parser;
+import com.venherak.compiler.syntax.Rule;
+import com.venherak.compiler.syntax.alphabet.NonTerminal;
+import com.venherak.compiler.syntax.alphabet.SymbolChain;
 import com.venherak.compiler.syntax.alphabet.Terminal;
+import com.venherak.compiler.syntax.table.Item;
 
 public class Main {
 
@@ -18,7 +24,19 @@ public class Main {
 
         Tokenizer tokenizer = new Tokenizer(code, language);
 
-        try {
+        NonTerminal nonTerminal = new NonTerminal("A");
+        Rule rule = new Rule(nonTerminal, new SymbolChain());
+        rule.getRight().add(new Terminal("1"));
+        rule.getRight().add(new Terminal("2"));
+        rule.getRight().add(new Terminal("3"));
+        rule.getRight().add(new Terminal("4"));
+        Item item = new Item(rule);
+        Language language1 = new LanguageTest();
+        Parser parser = new Parser(language1);
+        System.out.println(language1);
+        parser.formTable();
+
+/*        try {
             tokenizer.formTokens();
 
             System.out.println(tokenizer);
@@ -40,6 +58,6 @@ public class Main {
 
         } catch (WrongTokenException | SyntaxException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 }

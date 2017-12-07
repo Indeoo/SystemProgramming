@@ -6,6 +6,7 @@ import com.venherak.compiler.lexical.Token;
 import com.venherak.compiler.syntax.alphabet.AbstractSymbol;
 import com.venherak.compiler.syntax.alphabet.SymbolChain;
 import com.venherak.compiler.syntax.alphabet.Terminal;
+import com.venherak.compiler.syntax.table.Item;
 
 import java.util.List;
 
@@ -26,6 +27,13 @@ public class Parser {
     public Parser(Language language) {
         this.language = language;
         terminals = new SymbolChain();
+    }
+
+    public void formTable() {
+        System.out.println(language.getRules().get(0));
+        Item item = new Item(language.getRules().get(0));
+        System.out.println(item.getRightSymbol());
+        System.out.println(language.getProductionsOf(language.getRules().get(1).getLeft()));
     }
 
     public void formTree() throws SyntaxException {

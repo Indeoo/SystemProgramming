@@ -18,7 +18,7 @@ public abstract class Language {
     private List<NonTerminal> nonTerminals;
 
     public Language() {
-        this.root = new NonTerminal("ROOT");
+        this.root = new NonTerminal("ROOTs");
         this.rules = new ArrayList<>();
         this.terminals = new ArrayList<>();
         nonTerminals = new ArrayList<>();
@@ -61,6 +61,17 @@ public abstract class Language {
         }
         return rules;
     }
+
+    public List<Rule> getProductionsOf(AbstractSymbol symbol) {
+        List<Rule> rules = new ArrayList<>();
+        for(Rule rule: getRules()) {
+            if(rule.getLeft().getLiteral().equals(symbol.getLiteral())) {
+                rules.add(rule);
+            }
+        }
+        return rules;
+    }
+
     public List<Terminal> getTerminals() {
         return terminals;
     }
@@ -91,4 +102,13 @@ public abstract class Language {
     public abstract void formTokenRules(List<Token> tokens);
 
     public abstract boolean checkIfAllowedString(String string);
+
+    @Override
+    public String toString() {
+        StringBuilder result = new StringBuilder();
+        for(Rule rule: getRules()) {
+            result.append(rule.toString()).append("\n");
+        }
+        return result.toString();
+    }
 }
