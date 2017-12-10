@@ -46,16 +46,26 @@ public abstract class Language {
         return abstractSymbolList;
     }
 
-    public List<Rule> findRules(AbstractSymbol symbol) {
+    public List<Rule> findRulesEnd(AbstractSymbol symbol) {
         SymbolChain symbols = new SymbolChain();
         symbols.add(symbol);
-        return findRules(symbols);
+        return findRulesEnd(symbols);
     }
 
-    public List<Rule> findRules(SymbolChain symbolChain) {
+    public List<Rule> findRulesEnd(SymbolChain symbolChain) {
         List<Rule> rules = new ArrayList<>();
         for (Rule rule : getRules()) {
             if (rule.checkBackPartCoincidence(symbolChain)) {
+                rules.add(rule);
+            }
+        }
+        return rules;
+    }
+
+    public List<Rule> findRulesBegin(AbstractSymbol symbol) {
+        List<Rule> rules = new ArrayList<>();
+        for (Rule rule : getRules()) {
+            if (rule.checkBeginPartConciedence(symbol)) {
                 rules.add(rule);
             }
         }

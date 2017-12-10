@@ -41,7 +41,7 @@ public class Rule {
         return false;
     }
 
-    public boolean checkSequenceBeginWith(AbstractSymbol symbol) {
+    public boolean checkBeginPartConciedence(AbstractSymbol symbol) {
         return getRight().get(0).getLiteral().equals(symbol.getLiteral());
     }
 

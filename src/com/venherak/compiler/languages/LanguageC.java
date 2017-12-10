@@ -17,6 +17,7 @@ public class LanguageC extends Language {
     }
 
     public void formRules() {
+        NonTerminal ROOT = new NonTerminal("ROOT");
         NonTerminal STATEMENTS = new NonTerminal("Statements");
         NonTerminal STATEMENT = new NonTerminal("Statement");
         NonTerminal ARRAYEXPRESSION = new NonTerminal("ArrayExpression");
@@ -113,6 +114,11 @@ public class LanguageC extends Language {
         ruleBrackets4.getRight().add((EXPRESSION));
         ruleBrackets4.getRight().add(new Terminal(")"));
 
+
+        Rule ruleRoot = new Rule(ROOT, new SymbolChain());
+        ruleRoot.getRight().add(STATEMENTS);
+
+        ruleList.add(ruleRoot);
         ruleList.add(eRule1);
         ruleList.add(eRule2);
         ruleList.add(eRule3);

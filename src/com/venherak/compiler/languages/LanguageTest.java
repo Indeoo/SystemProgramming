@@ -26,8 +26,8 @@ public class LanguageTest extends Language {
         rule2.getRight().add(A);
 
         Rule rule3 = new Rule(A, new SymbolChain());
-        rule3.getRight().add(A);
         rule3.getRight().add(new Terminal("a"));
+        rule3.getRight().add(A);
 
         Rule rule4 = new Rule(A, new SymbolChain());
         rule4.getRight().add(new Terminal("b"));
