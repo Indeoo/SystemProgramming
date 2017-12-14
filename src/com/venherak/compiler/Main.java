@@ -2,25 +2,25 @@ package com.venherak.compiler;
 
 import com.venherak.compiler.exceptions.SyntaxException;
 import com.venherak.compiler.languages.Language;
-import com.venherak.compiler.languages.LanguageC;
+import com.venherak.compiler.languages.LanguagePascal;
 import com.venherak.compiler.languages.LanguageTest;
+import com.venherak.compiler.lexical.Token;
 import com.venherak.compiler.lexical.Tokenizer;
 import com.venherak.compiler.exceptions.WrongTokenException;
 import com.venherak.compiler.syntax.Parser;
-import com.venherak.compiler.syntax.Rule;
-import com.venherak.compiler.syntax.alphabet.NonTerminal;
 import com.venherak.compiler.syntax.alphabet.SymbolChain;
 import com.venherak.compiler.syntax.alphabet.Terminal;
-import com.venherak.compiler.syntax.table.Item;
-import com.venherak.compiler.syntax.table.State;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Main {
 
     public static void main(String[] args) {
-        String code = "a=b+c;";
+        String code = "if (a<b) then begin a:=b+c; end;";
         System.out.println(code + "\n");
 
-        LanguageC language = new LanguageC();
+        Language language = new LanguagePascal();
 
         Tokenizer tokenizer = new Tokenizer(code, language);
 
@@ -30,7 +30,16 @@ public class Main {
 
             language.formTokenRules(tokenizer.getLexemeTableList());
             language.viewRules();
+
+            SymbolChain lexems = new SymbolChain();
+/*            lexems.add(new Terminal("a"));
+            lexems.add(new Terminal("a"));
+            lexems.add(new Terminal("b"));
+            lexems.add(new Terminal("b"));*/
+
             Parser parser = new Parser(tokenizer.getLexemeTableList(), language);
+           // Parser parser = new Parser(language);
+            parser.getTerminals().addAll(lexems);
 
             parser.formTable();
 

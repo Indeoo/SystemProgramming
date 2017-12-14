@@ -7,7 +7,6 @@ import com.venherak.compiler.syntax.alphabet.AbstractSymbol;
 import com.venherak.compiler.syntax.alphabet.SymbolChain;
 import com.venherak.compiler.syntax.alphabet.Terminal;
 import com.venherak.compiler.syntax.table.State;
-import jdk.nashorn.internal.ir.Symbol;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +22,9 @@ public class Parser {
         this.language = language;
         this.terminals = new SymbolChain();
         for (Token token : tokens) {
-            terminals.add(new Terminal(token));
+            if(!token.getSign().equals(" ")) {
+                terminals.add(new Terminal(token));
+            }
         }
         this.states = new ArrayList<>();
         currentState = new State(language);
@@ -42,19 +43,23 @@ public class Parser {
         currentState.formStates(states);
         states.get(1).setAccept(true);
         states.get(1).getItemList().get(0).setFinish(false);
+/*        System.out.println();
+        System.out.println("KEKBEGIN");
+        System.out.println(states);
+        System.out.println("KEKEND");
+        System.out.println();*/
         Stack stack = new Stack();
         stack.push(currentState);
-/*        for (int i = 0; i < states.size(); i++) {
-            System.out.println(states.get(i) + " " + i);
-        }*/
 
         int i = 0;
         try {
             while (!currentState.isAccept()) {
+/*                System.out.println(currentState);
                 System.out.println(terminals.getHighTreeLayer());
-/*            System.out.println(terminals.getHighTreeLayer());
-            System.out.println(currentState);
-            System.out.println(terminals.getHighTreeLayer().get(i) + "  sss "  );*/
+                System.out.println(terminals.getHighTreeLayer().get(i) + " SIGNAL");
+                System.out.println("----------------");
+                System.out.println(currentState.getNextStates());
+                System.out.println("----------------");*/
                 changeState(terminals.getHighTreeLayer().get(i));
 
                 stack.push(terminals.getHighTreeLayer().get(i));
@@ -62,7 +67,8 @@ public class Parser {
 
                 if (currentState.isFinishState()) {
                     SymbolChain symbols = new SymbolChain();
-                    for (int j = 0; j < currentState.getItemList().get(0).getRule().getRight().size(); j++) {
+                    int ruleSize = currentState.getItemList().get(0).getRule().getRight().size();
+                    for (int j = 0; j < ruleSize; j++) {
                         changeState((State) stack.pop());
                         symbols.add(0, (AbstractSymbol) stack.pop());
                         i--;
@@ -77,46 +83,10 @@ public class Parser {
             stack.pop();
             AbstractSymbol symbol = (AbstractSymbol) stack.pop();
             State state = (State) stack.pop();
-            throw  new SyntaxException("Error in " + symbol + " supposed to be " + state.getItemList());
+            throw  new SyntaxException("Error in \"" + symbol + "\" supposed to be " + state.getItemList());
+        } catch (IndexOutOfBoundsException e) {
+            e.printStackTrace();
         }
-     //   System.out.println(terminals.getHighTreeLayer());
-/*        System.out.println(states.get(4));
-        changeState(terminals.get(0));
-        System.out.println(currentState.getNextStates());
-
-        System.out.println(states.get(0).getNextStates().get(2).getNextStates());*/
-//        System.out.println(currentState.getNextStates());
-/*        Stack stack = new Stack();
-        stack.push(currentState);
-
-        int i = 0;
-        while (!currentState.isAccept()) {
-            System.out.println(currentState);
-            System.out.println(currentState.isAccept());
-            changeState(terminals.getHighTreeLayer().get(i));
-            System.out.println(terminals.getHighTreeLayer().get(i));
-            System.out.println(currentState);
-
-            stack.push(terminals.getHighTreeLayer().get(i));
-            stack.push(currentState);
-           *//* System.out.println(i);
-            System.out.println(terminals.getHighTreeLayer());
-            System.out.println(terminals.getHighTreeLayer().get(i));*//*
-
-            if (currentState.isFinishState()) {
-                SymbolChain symbols = new SymbolChain();
-                for (int j = 0; j < currentState.getItemList().get(0).getRule().getRight().size(); j++) {
-                    changeState((State) stack.pop());
-                    symbols.add(0, (AbstractSymbol) stack.pop());
-                    i--;
-                }
-                changeState((State) stack.pop());
-                stack.push(currentState);
-                symbols.reduceChainByRule(language.getRules());
-            }
-            i++;
-        }
-        System.out.println(terminals.getHighTreeLayer());*/
     }
 
     public void changeState(AbstractSymbol signal) {

@@ -23,11 +23,13 @@ public class State {
         nextStates = new ArrayList<>();
     }
 
-    public State(Item item, Language language) {
+    public State(List<Item> itemList, Language language) {
         this.language = language;
-        itemList = new ArrayList<>();
-        itemList.add(item);
-        closure(item);
+        this.itemList = new ArrayList<>();
+        this.itemList.addAll(itemList);
+        for(Item item: itemList)  {
+            closure(item);
+        }
         nextStates = new ArrayList<>();
     }
 
@@ -47,20 +49,45 @@ public class State {
         List<Rule> rules = language.getProductionsOf(item.getRightSymbol());
         for (Rule rule : rules) {
             Item item1 = new Item(rule);
-            itemList.add(item1);
+            if(!itemList.contains(item1)) {
+               // System.out.println(itemList);
+               // System.out.println("SDASDASDASDASDD           asdas");
+                itemList.add(item1);
+            }
             if (language.getProductionsOf(item1.getRightSymbol()).size() > 0
                     && !item1.getRightSymbol().getLiteral().equals(item.getRightSymbol().getLiteral())) {
-               // System.out.println(language.getProductionsOf(item1.getRightSymbol()));
+                // System.out.println(language.getProductionsOf(item1.getRightSymbol()));
                 closure(item1);
             }
         }
     }
 
     public void formStates(List<State> states) {
-        State state;
+        State state = null;
+        System.out.println();
+
         for (int i = 0; i < getSignals().size(); i++) {
-            state = new State(itemList.get(i).getShiftedCopy(), language);
+            List<Item> items = new ArrayList<>();
+
+/*            if(getSignals().get(i).getLiteral().equals("end")) {
+                System.out.println(this);
+                System.out.println(getSignals().get(i) + " SIGNAL");
+                System.out.println();
+            }*/
+            for(Item item: itemList) {
+                if(getSignals().get(i).getLiteral().equals(item.getRightSymbol().getLiteral())) {
+                    items.add(item.getShiftedCopy());
+                    //System.out.println(item.getShiftedCopy() + " KEK");
+                }
+            }
+            state = new State(items, language);
+            //state = new State(itemList.get(i).getShiftedCopy(), language);
+
             if (!states.contains(state)) {
+                if(getSignals().get(i).getLiteral().equals("end")) {
+                    System.out.println(itemList);
+                    System.out.println(this);
+                }
                 nextStates.add(state);
                 states.add(state);
                 if (state.itemList.size() >= 1) {
@@ -100,7 +127,7 @@ public class State {
     }
 
     public boolean isFinishState() {
-        return itemList.size() == 1 && itemList.get(0).isFinish();
+        return itemList.get(0).isFinish();
     }
 
     @Override
