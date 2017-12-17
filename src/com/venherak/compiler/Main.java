@@ -17,7 +17,7 @@ import java.util.List;
 public class Main {
 
     public static void main(String[] args) {
-        String code = "if (a<b) then begin a:=b+c; end;";
+        String code = "if ((a+b)<d) then begin a:=c; end;";
         System.out.println(code + "\n");
 
         Language language = new LanguagePascal();
@@ -38,7 +38,7 @@ public class Main {
             lexems.add(new Terminal("b"));*/
 
             Parser parser = new Parser(tokenizer.getLexemeTableList(), language);
-           // Parser parser = new Parser(language);
+            // Parser parser = new Parser(language);
             parser.getTerminals().addAll(lexems);
 
             parser.formTable();

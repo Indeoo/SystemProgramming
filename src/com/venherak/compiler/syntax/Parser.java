@@ -22,11 +22,11 @@ public class Parser {
         this.language = language;
         this.terminals = new SymbolChain();
         for (Token token : tokens) {
-            if(!token.getSign().equals(" ")) {
+            if (!token.getSign().equals(" ")) {
                 terminals.add(new Terminal(token));
             }
         }
-        this.states = new ArrayList<>();
+        states = new ArrayList<>();
         currentState = new State(language);
         states.add(currentState);
     }
@@ -41,23 +41,23 @@ public class Parser {
 
     public void formTable() throws SyntaxException {
         currentState.formStates(states);
+        for(State statekek: states) {
+            System.out.println(statekek.hashCode());
+        }
+        System.out.println(states);
+
         states.get(1).setAccept(true);
         states.get(1).getItemList().get(0).setFinish(false);
-/*        System.out.println();
-        System.out.println("KEKBEGIN");
-        System.out.println(states);
-        System.out.println("KEKEND");
-        System.out.println();*/
         Stack stack = new Stack();
         stack.push(currentState);
 
         int i = 0;
         try {
             while (!currentState.isAccept()) {
-/*                System.out.println(currentState);
+                System.out.println(currentState);
                 System.out.println(terminals.getHighTreeLayer());
                 System.out.println(terminals.getHighTreeLayer().get(i) + " SIGNAL");
-                System.out.println("----------------");
+              /*  System.out.println("----------------");
                 System.out.println(currentState.getNextStates());
                 System.out.println("----------------");*/
                 changeState(terminals.getHighTreeLayer().get(i));
@@ -83,7 +83,7 @@ public class Parser {
             stack.pop();
             AbstractSymbol symbol = (AbstractSymbol) stack.pop();
             State state = (State) stack.pop();
-            throw  new SyntaxException("Error in \"" + symbol + "\" supposed to be " + state.getItemList());
+            throw new SyntaxException("Error in \"" + symbol + "\" supposed to be " + state.getItemList());
         } catch (IndexOutOfBoundsException e) {
             e.printStackTrace();
         }

@@ -1,6 +1,5 @@
 package com.venherak.compiler.languages;
 
-import com.sun.xml.internal.bind.v2.model.core.ID;
 import com.venherak.compiler.lexical.Token;
 import com.venherak.compiler.syntax.Rule;
 import com.venherak.compiler.syntax.alphabet.NonTerminal;
@@ -122,7 +121,7 @@ public class LanguagePascal extends Language {
 
         Rule ifStatement2 = new Rule(STATEMENT, new SymbolChain());
         ifStatement2.getRight().add(IFSTATEMENT);
-        ifStatement2.getRight().add(STATEMENT);
+        ifStatement2.getRight().add(STATEMENTS);
 
         Rule ifStatement3 = new Rule(STATEMENT, new SymbolChain());
         ifStatement3.getRight().add(IFSTATEMENT);

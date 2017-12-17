@@ -58,4 +58,8 @@ public class Rule {
         return left + " -> " + right;
     }
 
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
 }
