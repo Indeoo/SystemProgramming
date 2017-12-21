@@ -17,7 +17,7 @@ public class State {
     public State(Language language) {
         this.language = language;
         itemList = new ArrayList<>();
-        Item item = new Item(language.findRulesBegin(new NonTerminal("Statements")).get(0));
+        Item item = new Item(language.findRulesBegin(new NonTerminal("CodeBlock")).get(0));
         itemList.add(item);
         closure(item);
         nextStates = new ArrayList<>();
@@ -37,7 +37,7 @@ public class State {
         return itemList;
     }
 
-    public List<AbstractSymbol> getSignals() {
+    private List<AbstractSymbol> getSignals() {
         List<AbstractSymbol> abstractSymbols = new ArrayList<>();
         for (Item item : itemList) {
             abstractSymbols.add(item.getRightSymbol());
@@ -48,13 +48,13 @@ public class State {
     private void closure(Item item) {
         List<Rule> rules = language.getProductionsOf(item.getRightSymbol());
         for (Rule rule : rules) {
-            Item item1 = new Item(rule);
-            if (!itemList.contains(item1)) {
-                itemList.add(item1);
+            Item eachItem = new Item(rule);
+            if (!itemList.contains(eachItem)) {
+                itemList.add(eachItem);
             }
-            if (language.getProductionsOf(item1.getRightSymbol()).size() > 0
-                    && !item1.getRightSymbol().getLiteral().equals(item.getRightSymbol().getLiteral())) {
-                closure(item1);
+            if (language.getProductionsOf(eachItem.getRightSymbol()).size() > 0
+                    && !eachItem.getRightSymbol().getLiteral().equals(item.getRightSymbol().getLiteral())) {
+                closure(eachItem);
             }
         }
     }
@@ -66,21 +66,12 @@ public class State {
             List<Item> items = new ArrayList<>();
 
             for (Item item : itemList) {
-                System.out.println(getSignals().get(i).getLiteral() + "  " + item.getRightSymbol().getLiteral());
                 if (getSignals().get(i).getLiteral().equals(item.getRightSymbol().getLiteral())) {
-                    System.out.println(item);
-                    System.out.println(item.getShiftedCopy());
-                    System.out.println("KEKO  " + item.getRightSymbol().getLiteral());
                     items.add(item.getShiftedCopy());
                 }
             }
             state = new State(items, language);
-            System.out.println(state.hashCode());
-            System.out.println(!states.contains(state));
-            System.out.println("POINT  ");
             if (!states.contains(state)) {
-                System.out.println("OSSSSS");
-                System.out.println(state);
                 nextStates.add(state);
                 states.add(state);
                 if (state.itemList.size() >= 1) {
@@ -123,17 +114,17 @@ public class State {
         return itemList.get(0).isFinish();
     }
 
-    @Override
-    public boolean equals(Object o) {
-        return o.hashCode() == hashCode();
-    }
-
     public boolean isAccept() {
         return accept;
     }
 
     public void setAccept(boolean accept) {
         this.accept = accept;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return o.hashCode() == hashCode();
     }
 
     @Override

@@ -34,8 +34,6 @@ public class LanguagePascal extends Language {
         NonTerminal BEGINEND = new NonTerminal("BeginEnd");
         NonTerminal StateOperator = new NonTerminal("StateOperator");
 
-        Terminal SPACETerminal = new Terminal(" ");
-
         getNonTerminals().add(STATEMENT);
         getNonTerminals().add(EXPRESSION);
         getNonTerminals().add(DELIMITER);
@@ -92,32 +90,28 @@ public class LanguagePascal extends Language {
 
         Rule rule10 = new Rule(FORSTATEMENT, new SymbolChain());
         rule10.getRight().add(new Terminal("for"));
-        rule10.getRight().add(SPACETerminal);
-        rule10.getRight().add(STATEMENT);
-        rule10.getRight().add(SPACETerminal);
-        rule10.getRight().add(new Terminal("to"));
-        rule10.getRight().add(SPACETerminal);
+        rule10.getRight().add(IDENTIFIER);
+        rule10.getRight().add(StateOperator);
         rule10.getRight().add(EXPRESSION);
-        rule10.getRight().add(SPACETerminal);
+        rule10.getRight().add(new Terminal("to"));
+        rule10.getRight().add(CONSTANT);
         rule10.getRight().add(new Terminal("do"));
+
+        Rule rule11 = new Rule(BEGINEND, new SymbolChain());
+        rule11.getRight().add(new Terminal("begin"));
+        rule11.getRight().add(IDENTIFIER);
+        rule11.getRight().add(StateOperator);
+        rule11.getRight().add(EXPRESSION);
+        rule11.getRight().add(new Terminal("end"));
+        rule11.getRight().add(new Terminal(";"));
 
         Rule forStatement1 = new Rule(STATEMENT, new SymbolChain());
         forStatement1.getRight().add(FORSTATEMENT);
-        forStatement1.getRight().add(SPACETerminal);
-        forStatement1.getRight().add(new Terminal("begin"));
-        forStatement1.getRight().add(SPACETerminal);
-        forStatement1.getRight().add(new Terminal("end"));
+        forStatement1.getRight().add(BEGINEND);
 
         Rule forStatement2 = new Rule(STATEMENT, new SymbolChain());
         forStatement2.getRight().add(FORSTATEMENT);
-        forStatement2.getRight().add(SPACETerminal);
-        forStatement2.getRight().add(new Terminal("begin"));
         forStatement2.getRight().add(STATEMENTS);
-        forStatement2.getRight().add(new Terminal("end"));
-
-        Rule forStatement3 = new Rule(STATEMENT, new SymbolChain());
-        forStatement3.getRight().add(FORSTATEMENT);
-        forStatement3.getRight().add(STATEMENTS);
 
         Rule ifStatement2 = new Rule(STATEMENT, new SymbolChain());
         ifStatement2.getRight().add(IFSTATEMENT);
@@ -162,14 +156,15 @@ public class LanguagePascal extends Language {
         ruleList.add(eRule1);
         ruleList.add(eRule2);
         ruleList.add(eRule3);
-       // ruleList.add(rule7);
+        // ruleList.add(rule7);
         ruleList.add(rule8);
         ruleList.add(ruleBrackets4);
         ruleList.add(rule9);
         ruleList.add(rule10);
-       // ruleList.add(forStatement1);
-        //ruleList.add(forStatement2);
-       // ruleList.add(forStatement3);
+        ruleList.add(forStatement1);
+        ruleList.add(forStatement2);
+        ruleList.add(rule11);
+        // ruleList.add(forStatement3);
         ruleList.add(ifStatement2);
         ruleList.add(ifStatement3);
         ruleList.add(rule13);
@@ -252,6 +247,7 @@ public class LanguagePascal extends Language {
         keywordList.add(new Token("to", "Keyword"));
 
         //binary
+        operatorList.add(new Token("=", "Operator"));
         operatorList.add(new Token("+", "Operator"));
         operatorList.add(new Token("-", "Operator"));
         operatorList.add(new Token("*", "Operator"));
@@ -261,7 +257,6 @@ public class LanguagePascal extends Language {
         operatorList.add(new Token(":", "Operator"));
 
         //binary && assingment
-        operatorList.add(new Token("=", "Operator"));
         operatorList.add(new Token("-=", "StateOperator"));
         operatorList.add(new Token("+=", "StateOperator"));
         operatorList.add(new Token("*=", "StateOperator"));
@@ -270,6 +265,6 @@ public class LanguagePascal extends Language {
     }
 
     public boolean checkIfAllowedString(String string) {
-        return string.matches("[a-zA-Z0-9=+*/%;&:|\\[\\]_(),\\\"'.<> {}-]+$");
+        return string.matches("[a-zA-Z0-9=+*/%;&:|\\[\\]_(),\"'.<> {}-]+$");
     }
 }
