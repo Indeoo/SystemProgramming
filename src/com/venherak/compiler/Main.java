@@ -3,6 +3,7 @@ package com.venherak.compiler;
 import com.venherak.compiler.exceptions.SyntaxException;
 import com.venherak.compiler.languages.Language;
 import com.venherak.compiler.languages.LanguageC;
+import com.venherak.compiler.languages.LanguagePascal;
 import com.venherak.compiler.languages.LanguageTest;
 import com.venherak.compiler.lexical.Tokenizer;
 import com.venherak.compiler.exceptions.WrongTokenException;
@@ -17,10 +18,10 @@ import com.venherak.compiler.syntax.table.State;
 public class Main {
 
     public static void main(String[] args) {
-        String code = "a=b+c;";
+        String code = "a+=b+c;";
         System.out.println(code + "\n");
 
-        LanguageC language = new LanguageC();
+        Language language = new LanguagePascal();
 
         Tokenizer tokenizer = new Tokenizer(code, language);
 

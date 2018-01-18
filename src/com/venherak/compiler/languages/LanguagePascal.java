@@ -65,10 +65,13 @@ public class LanguagePascal extends Language {
 
         Rule eRule1 = new Rule(EXPRESSION, new SymbolChain());
         eRule1.getRight().add(IDENTIFIER);
+        eRule1.getRight().add(OPERATOR);
+        eRule1.getRight().add(IDENTIFIER);
+
         Rule eRule2 = new Rule(EXPRESSION, new SymbolChain());
-        eRule2.getRight().add(IDENTIFIER);
-        eRule2.getRight().add(OPERATOR);
         eRule2.getRight().add(EXPRESSION);
+        eRule2.getRight().add(OPERATOR);
+        eRule2.getRight().add(IDENTIFIER);
 
         Rule rule7 = new Rule(STATEMENT, new SymbolChain());
         rule7.getRight().add(IDENTIFIER);
@@ -143,6 +146,20 @@ public class LanguagePascal extends Language {
         rule12.getRight().add(STATEMENT);
         rule12.getRight().add(new Terminal(" "));
 
+
+        Rule rule14 = new Rule(STATEMENT, new SymbolChain());
+        rule14.getRight().add(IDENTIFIER);
+        rule14.getRight().add(StateOperator);
+        rule14.getRight().add(EXPRESSION);
+
+        Rule rule15 = new Rule(STATEMENTS, new SymbolChain());
+        rule15.getRight().add(STATEMENT);
+        rule15.getRight().add(new Terminal(";"));
+
+
+        Rule rule16 = new Rule(new NonTerminal("ROOT"), new SymbolChain());
+        rule16.getRight().add(STATEMENTS);
+
         ruleList.add(ruleBrackets3);
         ruleList.add(eRule1);
         ruleList.add(eRule2);
@@ -157,6 +174,9 @@ public class LanguagePascal extends Language {
         ruleList.add(ifStatement1);
         ruleList.add(ifStatement2);
         ruleList.add(ifStatement3);
+        ruleList.add(rule14);
+        ruleList.add(rule15);
+        ruleList.add(rule16);
         //   ruleList.add(rule13);
 
         getRules().addAll(ruleList);
