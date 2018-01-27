@@ -19,7 +19,7 @@ public class LanguagePascal extends Language {
     public void formRules() {
         List<Rule> ruleList = new ArrayList<>();
 
-
+        NonTerminal ROOT = new NonTerminal("ROOT");
         NonTerminal STATEMENTS = new NonTerminal("Statements");
         NonTerminal FORSTATEMENT = new NonTerminal("ForStatement");
         NonTerminal IFSTATEMENT = new NonTerminal("IFStatement");
@@ -31,9 +31,8 @@ public class LanguagePascal extends Language {
         NonTerminal OPERATOR = new NonTerminal("Operator");
         NonTerminal CONSTANT = new NonTerminal("Constant");
         NonTerminal BRACKETS = new NonTerminal("Brackets");
+        NonTerminal BEGINEND = new NonTerminal("BeginEnd");
         NonTerminal StateOperator = new NonTerminal("StateOperator");
-
-        Terminal SPACETerminal = new Terminal(" ");
 
         getNonTerminals().add(STATEMENT);
         getNonTerminals().add(EXPRESSION);
@@ -65,13 +64,16 @@ public class LanguagePascal extends Language {
 
         Rule eRule1 = new Rule(EXPRESSION, new SymbolChain());
         eRule1.getRight().add(IDENTIFIER);
-        eRule1.getRight().add(OPERATOR);
-        eRule1.getRight().add(IDENTIFIER);
 
         Rule eRule2 = new Rule(EXPRESSION, new SymbolChain());
         eRule2.getRight().add(EXPRESSION);
         eRule2.getRight().add(OPERATOR);
         eRule2.getRight().add(IDENTIFIER);
+
+        Rule eRule3 = new Rule(EXPRESSION, new SymbolChain());
+        eRule3.getRight().add(IDENTIFIER);
+        eRule3.getRight().add(OPERATOR);
+        eRule3.getRight().add(IDENTIFIER);
 
         Rule rule7 = new Rule(STATEMENT, new SymbolChain());
         rule7.getRight().add(IDENTIFIER);
@@ -83,101 +85,93 @@ public class LanguagePascal extends Language {
 
         Rule rule9 = new Rule(IFSTATEMENT, new SymbolChain());
         rule9.getRight().add(new Terminal("if"));
-        rule9.getRight().add(SPACETerminal);
         rule9.getRight().add(EXPRESSION);
-        rule9.getRight().add(SPACETerminal);
         rule9.getRight().add(new Terminal("then"));
 
         Rule rule10 = new Rule(FORSTATEMENT, new SymbolChain());
         rule10.getRight().add(new Terminal("for"));
-        rule10.getRight().add(SPACETerminal);
-        rule10.getRight().add(STATEMENT);
-        rule10.getRight().add(SPACETerminal);
-        rule10.getRight().add(new Terminal("to"));
-        rule10.getRight().add(SPACETerminal);
+        rule10.getRight().add(IDENTIFIER);
+        rule10.getRight().add(StateOperator);
         rule10.getRight().add(EXPRESSION);
-        rule10.getRight().add(SPACETerminal);
+        rule10.getRight().add(new Terminal("to"));
+        rule10.getRight().add(CONSTANT);
         rule10.getRight().add(new Terminal("do"));
+
+        Rule rule11 = new Rule(BEGINEND, new SymbolChain());
+        rule11.getRight().add(new Terminal("begin"));
+        rule11.getRight().add(IDENTIFIER);
+        rule11.getRight().add(StateOperator);
+        rule11.getRight().add(EXPRESSION);
+        rule11.getRight().add(new Terminal("end"));
+        rule11.getRight().add(new Terminal(";"));
 
         Rule forStatement1 = new Rule(STATEMENT, new SymbolChain());
         forStatement1.getRight().add(FORSTATEMENT);
-        forStatement1.getRight().add(SPACETerminal);
-        forStatement1.getRight().add(new Terminal("begin"));
-        forStatement1.getRight().add(SPACETerminal);
-        forStatement1.getRight().add(new Terminal("end"));
+        forStatement1.getRight().add(BEGINEND);
 
         Rule forStatement2 = new Rule(STATEMENT, new SymbolChain());
         forStatement2.getRight().add(FORSTATEMENT);
-        forStatement2.getRight().add(SPACETerminal);
-        forStatement2.getRight().add(new Terminal("begin"));
         forStatement2.getRight().add(STATEMENTS);
-        forStatement2.getRight().add(new Terminal("end"));
-
-        Rule forStatement3 = new Rule(STATEMENT, new SymbolChain());
-        forStatement3.getRight().add(FORSTATEMENT);
-        forStatement3.getRight().add(SPACETerminal);
-        forStatement3.getRight().add(STATEMENTS);
-
-        Rule ifStatement1 = new Rule(STATEMENT, new SymbolChain());
-        ifStatement1.getRight().add(IFSTATEMENT);
-        ifStatement1.getRight().add(SPACETerminal);
-        ifStatement1.getRight().add(new Terminal("begin"));
-        ifStatement1.getRight().add(SPACETerminal);
-        ifStatement1.getRight().add(new Terminal("end"));
 
         Rule ifStatement2 = new Rule(STATEMENT, new SymbolChain());
         ifStatement2.getRight().add(IFSTATEMENT);
-        ifStatement2.getRight().add(SPACETerminal);
         ifStatement2.getRight().add(STATEMENTS);
-        ifStatement2.getRight().add(new Terminal(";"));
 
         Rule ifStatement3 = new Rule(STATEMENT, new SymbolChain());
         ifStatement3.getRight().add(IFSTATEMENT);
-        ifStatement3.getRight().add(SPACETerminal);
-        ifStatement3.getRight().add(new Terminal("begin"));
-        ifStatement3.getRight().add(SPACETerminal);
-        ifStatement3.getRight().add(STATEMENT);
-        ifStatement3.getRight().add(new Terminal(";"));
-        ifStatement3.getRight().add(SPACETerminal);
-        ifStatement3.getRight().add(new Terminal("end"));
-        ifStatement3.getRight().add(new Terminal(";"));
+        ifStatement3.getRight().add(BEGINEND);
 
         Rule rule12 = new Rule(STATEMENT, new SymbolChain());
         rule12.getRight().add(STATEMENT);
-        rule12.getRight().add(new Terminal(" "));
 
+        Rule rule13 = new Rule(STATEMENT, new SymbolChain());
+        rule13.getRight().add(IDENTIFIER);
+        rule13.getRight().add(StateOperator);
+        rule13.getRight().add(EXPRESSION);
+        rule13.getRight().add(new Terminal(";"));
 
-        Rule rule14 = new Rule(STATEMENT, new SymbolChain());
-        rule14.getRight().add(IDENTIFIER);
-        rule14.getRight().add(StateOperator);
-        rule14.getRight().add(EXPRESSION);
+        Rule rule14 = new Rule(STATEMENTS, new SymbolChain());
+        rule14.getRight().add(STATEMENT);
 
-        Rule rule15 = new Rule(STATEMENTS, new SymbolChain());
-        rule15.getRight().add(STATEMENT);
-        rule15.getRight().add(new Terminal(";"));
+        Rule ruleRoot = new Rule(ROOT, new SymbolChain());
+        ruleRoot.getRight().add(STATEMENTS);
 
+        Rule rule15  = new Rule(STATEMENT, new SymbolChain());
+        rule15.getRight().add(IDENTIFIER);
+        rule15.getRight().add(StateOperator);
+        rule15.getRight().add(IDENTIFIER);
 
-        Rule rule16 = new Rule(new NonTerminal("ROOT"), new SymbolChain());
-        rule16.getRight().add(STATEMENTS);
+        Rule beginEndRule1 = new Rule(BEGINEND, new SymbolChain());
+        beginEndRule1.getRight().add(new Terminal("begin"));
+        beginEndRule1.getRight().add(STATEMENTS);
+        beginEndRule1.getRight().add(new Terminal("end"));
+        beginEndRule1.getRight().add(new Terminal(";"));
 
-        ruleList.add(ruleBrackets3);
+        Rule beginEndRule2 = new Rule(BEGINEND, new SymbolChain());
+        beginEndRule2.getRight().add(new Terminal("begin"));
+        beginEndRule2.getRight().add(new Terminal("end"));
+        beginEndRule2.getRight().add(new Terminal(";"));
+
+        //ruleList.add(ruleBrackets3);
         ruleList.add(eRule1);
         ruleList.add(eRule2);
-        ruleList.add(rule7);
+        ruleList.add(eRule3);
+        // ruleList.add(rule7);
         ruleList.add(rule8);
         ruleList.add(ruleBrackets4);
         ruleList.add(rule9);
         ruleList.add(rule10);
         ruleList.add(forStatement1);
         ruleList.add(forStatement2);
-        ruleList.add(forStatement3);
-        ruleList.add(ifStatement1);
+        ruleList.add(rule11);
+        // ruleList.add(forStatement3);
         ruleList.add(ifStatement2);
         ruleList.add(ifStatement3);
+        ruleList.add(rule13);
         ruleList.add(rule14);
-        ruleList.add(rule15);
-        ruleList.add(rule16);
-        //   ruleList.add(rule13);
+        ruleList.add(ruleRoot);
+        ruleList.add(beginEndRule1);
+        ruleList.add(beginEndRule2);
 
         getRules().addAll(ruleList);
 
@@ -253,6 +247,7 @@ public class LanguagePascal extends Language {
         keywordList.add(new Token("to", "Keyword"));
 
         //binary
+        operatorList.add(new Token("=", "Operator"));
         operatorList.add(new Token("+", "Operator"));
         operatorList.add(new Token("-", "Operator"));
         operatorList.add(new Token("*", "Operator"));
@@ -262,7 +257,6 @@ public class LanguagePascal extends Language {
         operatorList.add(new Token(":", "Operator"));
 
         //binary && assingment
-        operatorList.add(new Token("=", "Operator"));
         operatorList.add(new Token("-=", "StateOperator"));
         operatorList.add(new Token("+=", "StateOperator"));
         operatorList.add(new Token("*=", "StateOperator"));
@@ -271,6 +265,6 @@ public class LanguagePascal extends Language {
     }
 
     public boolean checkIfAllowedString(String string) {
-        return string.matches("[a-zA-Z0-9=+*/%;&:|\\[\\]_(),\\\"'.<> {}-]+$");
+        return string.matches("[a-zA-Z0-9=+*/%;&:|\\[\\]_(),\"'.<> {}-]+$");
     }
 }

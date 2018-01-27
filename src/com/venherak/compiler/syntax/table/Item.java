@@ -52,7 +52,7 @@ public class Item {
 
     public Item getShiftedCopy() {
         Item item = new Item(getRule(), point + 1);
-        if((point + 1) == rule.getRight().size()) {
+        if ((point + 1) == rule.getRight().size()) {
             item.finish = true;
             return item;
         } else {
@@ -92,6 +92,6 @@ public class Item {
 
     @Override
     public int hashCode() {
-        return point + rule.hashCode();
+        return point + rule.hashCode() / 2 + getRightSymbol().hashCode() / 2;
     }
 }

@@ -5,7 +5,7 @@ import com.venherak.compiler.languages.Language;
 
 import java.util.*;
 
-public class Tokenizer {
+public class Lexer {
     private Set<Token> delimiterSet;
     private Set<Token> operationSet;
     private Set<Token> keyWordSet;
@@ -26,7 +26,7 @@ public class Tokenizer {
     private static final String BRACKET_TOKEN = "Bracket";
     private static final String UNEXPECTED_TOKEN = "UNEXPECTED SYMBOL";
 
-    public Tokenizer(String code, Language language) {
+    public Lexer(String code, Language language) {
         this.code = code;
         this.identifierSet = new HashSet<>();
         this.constantSet = new HashSet<>();
@@ -40,30 +40,38 @@ public class Tokenizer {
 
     public void formTokens() throws WrongTokenException {
         char[] chars = code.toCharArray();
-        String word = "";
+        StringBuilder word = new StringBuilder();
         for (Character letter : chars) {
-            word += letter;
+            word.append(letter);
             if (language.checkIfAllowedString(letter.toString())) {
                 boolean operation = operationSet.contains(new Token(letter.toString(), OPERATOR_TOKEN));
                 boolean delimiter = delimiterSet.contains(new Token(letter.toString(), DELIMITER_TOKEN));
                 boolean bracket = delimiterSet.contains(new Token(letter.toString(), BRACKET_TOKEN));
 
                 if ((delimiter || operation || bracket)) {
-                    word = word.replace(letter.toString(), "");
-                    performTableStep(word);
+                    word = new StringBuilder(word.toString().replace(letter.toString(), ""));
+                    performTableStep(word.toString());
                     addTokenToLexemeList(findTokenBySign(letter.toString()));
-                    word = "";
+                    word = new StringBuilder();
                 }
             } else {
                 throw new WrongTokenException("Wrong Token! " + new Token(letter.toString(), "SYMBOL IS NOT ALLOWED"));
             }
         }
         if (word.length() != 0) {
-            performTableStep(word);
+            performTableStep(word.toString());
         }
         concatDoubleOperators();
-
-
+        for(Token token: identifierSet) {
+            if(token.getSign().equals("true") || token.getSign().equals("false")) {
+                token.setType("Constant");
+            }
+        }
+        for(Token token: operationSet) {
+            if(token.getSign().equals("=")) {
+                token.setType("StateOperator");
+            }
+        }
     }
 
     private void performTableStep(String word) throws WrongTokenException {
@@ -163,7 +171,7 @@ public class Tokenizer {
     }
 
     private Set<Token> getAllTokens() {
-        Set allTokensSet = new HashSet<>();
+        Set<Token> allTokensSet = new HashSet<>();
         allTokensSet.addAll(delimiterSet);
         allTokensSet.addAll(operationSet);
         allTokensSet.addAll(keyWordSet);

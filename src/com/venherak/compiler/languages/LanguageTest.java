@@ -32,10 +32,15 @@ public class LanguageTest extends Language {
         Rule rule4 = new Rule(A, new SymbolChain());
         rule4.getRight().add(new Terminal("b"));
 
+        Rule rule5 = new Rule(A, new SymbolChain());
+        rule5.getRight().add(new Terminal("a"));
+        rule5.getRight().add(new Terminal("c"));
+
         ruleList.add(rule1);
         ruleList.add(rule2);
         ruleList.add(rule3);
         ruleList.add(rule4);
+        ruleList.add(rule5);
 
         getRules().addAll(ruleList);
     }
