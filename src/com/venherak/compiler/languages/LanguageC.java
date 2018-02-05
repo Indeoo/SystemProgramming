@@ -107,6 +107,22 @@ public class LanguageC extends Language {
         rule9.getRight().add(STATEMENT);
         //rule9.getRight().add(new Terminal(";"));
 
+        Rule rule10 = new Rule(DECLARATION, new SymbolChain());
+        rule10.getRight().add(TYPE);
+        rule10.getRight().add(IDENTIFIER);
+        rule10.getRight().add(new Terminal(";"));
+        //rule7.getRight().add(new Terminal(";"));
+
+        Rule rule11 = new Rule(STATEMENT, new SymbolChain());
+        rule11.getRight().add(IDENTIFIER);
+        rule11.getRight().add(StateOperator);
+        rule11.getRight().add(IDENTIFIER);
+        rule11.getRight().add(new Terminal(";"));
+
+        Rule rule12 = new Rule(TYPE, new SymbolChain());
+        rule12.getRight().add(TYPE);
+        rule12.getRight().add(new Terminal("*"));
+
 
         Rule ruleBrackets = new Rule(EXPRESSION, new SymbolChain());
         ruleBrackets.getRight().add(CONSTANT);
@@ -223,6 +239,7 @@ public class LanguageC extends Language {
         ruleList.add(rule7);
         ruleList.add(rule8);
         ruleList.add(rule9);
+        //ruleList.add(rule10);
         ruleList.add(arrayRule1);
         ruleList.add(arrayRule2);
         ruleList.add(ruleBrackets4);
@@ -238,6 +255,8 @@ public class LanguageC extends Language {
         ruleList.add(function2);
         ruleList.add(codeblock1);
         ruleList.add(codeblock2);
+        ruleList.add(rule11);
+        ruleList.add(rule12);
         //ruleList.add(declist1);
         //ruleList.add(declist2);
 

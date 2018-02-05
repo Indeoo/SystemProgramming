@@ -11,9 +11,8 @@ import com.venherak.compiler.syntax.Parser;
 public class Main {
 
     public static void main(String[] args) {
-        String code = "{ int a; int b; int c; a = b + c; }";
+        String code = "{ float b; int n1; n+=b; }";
         System.out.println(code + "\n");
-
         try {
             Language language = new LanguageC();
 
@@ -23,7 +22,6 @@ public class Main {
 
             language.formTokenRules(lexer.getLexemeTableList());
             language.viewRules();
-
 
             Parser parser = new Parser(lexer.getLexemeTableList(), language);
             parser.parse();
